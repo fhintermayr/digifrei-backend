@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity
 public class Event {
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, optional = false)
     @JoinColumn(name = "creator_id", referencedColumnName = "id")
     User creator;
     @NotNull
@@ -27,7 +27,7 @@ public class Event {
     @NotNull
     LocalDateTime startTime;
     String location;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "event_participant",
             joinColumns = @JoinColumn(name = "event_id"),

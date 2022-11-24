@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 public class MatchLevel {
 
-    @ManyToOne(optional = false)
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE},optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     User user;
     @NotNull

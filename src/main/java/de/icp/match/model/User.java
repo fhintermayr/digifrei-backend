@@ -19,6 +19,7 @@ public class User {
     String firstName;
     @NotNull
     String lastName;
+    @NotNull
     @Column(unique = true)
     String username;
     @NotNull
@@ -30,16 +31,16 @@ public class User {
     @Lob
     Byte[] profilePicture;
     String profession;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "department_name", referencedColumnName = "name")
     Department department;
     String roomNumber;
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "user_preference_id", referencedColumnName = "id")
     UserPreference preference;
-    @ManyToMany(mappedBy = "participants")
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH} ,mappedBy = "participants")
     Set<Event> participatingEvents;
-    @ManyToMany(mappedBy = "participants")
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH} ,mappedBy = "participants")
     Set<Conversation> participatingConversations;
     @NotNull
     @Enumerated(EnumType.STRING)

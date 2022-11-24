@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 @Entity
 public class MatchProposal {
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "propoesed_for_user_id", referencedColumnName = "id")
     User proposedForUser;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "propoesed_user_id", referencedColumnName = "id")
     User proposedUser;
     @NotNull
