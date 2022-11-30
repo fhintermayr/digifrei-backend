@@ -1,6 +1,7 @@
 package de.icp.match.model;
 
 import com.sun.istack.NotNull;
+import de.icp.match.enums.MatchCategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

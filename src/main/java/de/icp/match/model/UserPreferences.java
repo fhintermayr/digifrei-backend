@@ -11,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class UserPreference {
+public class UserPreferences {
 
     @NotNull
     boolean prefersMale;

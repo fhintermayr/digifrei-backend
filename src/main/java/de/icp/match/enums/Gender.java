@@ -1,4 +1,4 @@
-package de.icp.match.model;
+package de.icp.match.enums;
 
 public enum Gender {
     MALE,

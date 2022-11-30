@@ -1,0 +1,233 @@
+openapi: 3.0.3
+info:
+  title: ICP Match
+  description: Web application for making new contacts and sharing knowledge between colleagues
+  contact:
+    name: 'Stiftung ICP München'
+    url: https://www.icpmuenchen.de/
+  version: 0.1.0
+servers:
+  - url: 'http://localhost:{port}/api/{apiVersion}'
+    description: Development server
+    variables:
+      port:
+        enum:
+          - '8080'
+        default: "8080"
+      apiVersion:
+        enum:
+          - 'v1'
+        default: "v1"
+  - url: 'https://example.org'
+    description: Production server
+tags:
+  - name: User
+    description: Operations about managing the application users
+
+
+
+paths:
+
+  /user/register:
+    post:
+      operationId: createUser
+      summary: Creates and registers a new user in the application
+      tags:
+        - User
+      requestBody:
+        required: true
+        description: Object containing all information about the user who should be saved in the application
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        201:
+          description: The newly created user based on the information provided in the request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /user/all:
+    get:
+      operationId: getAllUsers
+      summary: Returns all registered users
+      parameters:
+        - $ref: '#/components/parameters/maxResults'
+      tags:
+        - User
+      responses:
+        200:
+          description: A list containing all registered application users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /user/{userId}:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      operationId: getUserById
+      summary: Returns a user by his user id
+      tags:
+        - User
+      responses:
+        200:
+          description: All information about the user whose id was specified in the path parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      operationId: updateUserById
+      summary: Updates an existing user by his user id
+      tags:
+        - User
+      requestBody:
+        description: |
+          The user object containing all the new data that should be replaced.
+          You have to pass the old value of a property if it should not be replaced
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: The updated user containing the new data provided in the request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      operationId: deleteUserById
+      summary: Deletes an existing user by his user id
+      tags:
+        - User
+      responses:
+        200:
+          description: Specifies that deleting the user was performed successfully
+
+
+
+components:
+
+  parameters:
+    userId:
+      name: userId
+      description: The numeric id of the user for whom the desired action should be performed
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Id'
+
+    maxResults:
+      name: max_results
+      description: | 
+        The maximum number of results to be returned per page.
+        This can be any number greater than 0.
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        default: 50
+        example: 69
+
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        firstName:
+          type: string
+          pattern: ^[a-zA-Z\x7f-\xff-]{2,}$
+          example: Max
+        lastName:
+          type: string
+          pattern: ^[a-zA-Z\x7f-\xff-]{2,}$
+          example: Mustermann
+        username:
+          type: string
+          pattern: ^[a-zA-Z\x7f-\xff-]+[.][a-zA-Z\x7f-\xff-]+\d*$
+          example: max.mustermann2
+        password:
+          type: string
+          format: password
+          writeOnly: true
+          example: Str3ngG3h3!m
+        dateOfBirth:
+          type: string
+          format: date
+          description: The date of birth in ISO 8601 format (YYYY-MM-DD)
+          example: 1999-04-12
+        gender:
+          $ref: '#/components/schemas/Gender'
+        # The profile picture is missing here, because it will be handled in a separate endpoint for pictures
+        # to reduce the amount of data transmitted at once. The picture can also be accessed more easily
+        # in the controller when it will be transmitted as image/jpeg instead of application/json
+        profession:
+          type: string
+          pattern: ^\D+$
+          example: Ausbilder
+        department:
+          type: string
+          pattern: ^[a-zA-Z\x7f-\xff-]+$
+          example: Informationstechnik
+        roomNumber:
+          type: string
+          pattern: ^\d{1,3}[.]\d{1,3}[.]\d{1,3}$
+          example: 2.3.12
+        preferencesId:
+          $ref: '#/components/schemas/Id'
+        accessRole:
+          $ref: '#/components/schemas/AccessRole'
+      required:
+        - id
+        - firstName
+        - lastName
+        - username
+        - password
+        - gender
+        - profession
+        - department
+        - accessRole
+
+    Gender:
+      type: string
+      enum:
+        - MALE
+        - FEMALE
+        - DIVERSE
+        - NOT_PROVIDED
+      example: DIVERSE
+
+    AccessRole:
+      type: string
+      enum:
+        - ADMINISTRATOR
+        - MEMBER
+      default: MEMBER
+      example: MEMBER
+
+    Id:
+      type: integer
+      format: int64
+      minimum: 1
+      readOnly: true
+      example: 123
+
+
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JSON Web Token'

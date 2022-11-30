@@ -1,6 +1,8 @@
 package de.icp.match.model;
 
 import com.sun.istack.NotNull;
+import de.icp.match.enums.AccessRole;
+import de.icp.match.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,14 +32,14 @@ public class User {
     Gender gender;
     @Lob
     Byte[] profilePicture;
+    @NotNull
     String profession;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "department_name", referencedColumnName = "name")
-    Department department;
+    @NotNull
+    String department;
     String roomNumber;
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "user_preference_id", referencedColumnName = "id")
-    UserPreference preference;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_preferences_id", referencedColumnName = "id")
+    UserPreferences preferences;
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH} ,mappedBy = "participants")
     Set<Event> participatingEvents;
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH} ,mappedBy = "participants")

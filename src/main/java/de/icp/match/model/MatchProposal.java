@@ -1,6 +1,7 @@
 package de.icp.match.model;
 
 import com.sun.istack.NotNull;
+import de.icp.match.enums.MatchState;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,10 @@ import java.time.LocalDateTime;
 public class MatchProposal {
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "propoesed_for_user_id", referencedColumnName = "id")
+    @JoinColumn(name = "proposed_for_user_id", referencedColumnName = "id")
     User proposedForUser;
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "propoesed_user_id", referencedColumnName = "id")
+    @JoinColumn(name = "proposed_user_id", referencedColumnName = "id")
     User proposedUser;
     @NotNull
     LocalDateTime proposedAt;
