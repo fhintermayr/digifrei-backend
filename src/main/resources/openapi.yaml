@@ -40,7 +40,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserCreation'
       responses:
         201:
           description: The newly created user based on the information provided in the request body
@@ -158,11 +158,6 @@ components:
           type: string
           pattern: ^[a-zA-Z\x7f-\xff-]+[.][a-zA-Z\x7f-\xff-]+\d*$
           example: max.mustermann2
-        password:
-          type: string
-          format: password
-          writeOnly: true
-          example: Str3ngG3h3!m
         dateOfBirth:
           type: string
           format: date
@@ -194,6 +189,56 @@ components:
         - firstName
         - lastName
         - username
+        - gender
+        - profession
+        - department
+        - accessRole
+
+    UserCreation:
+      type: object
+      properties:
+        firstName:
+          type: string
+          pattern: ^[a-zA-Z\x7f-\xff-]{2,}$
+          example: Max
+        lastName:
+          type: string
+          pattern: ^[a-zA-Z\x7f-\xff-]{2,}$
+          example: Mustermann
+        username:
+          type: string
+          pattern: ^[a-zA-Z\x7f-\xff-]+[.][a-zA-Z\x7f-\xff-]+\d*$
+          example: max.mustermann2
+        password:
+          type: string
+          format: password
+          writeOnly: true
+          example: Str3ngG3h3!m
+        dateOfBirth:
+          type: string
+          format: date
+          description: The date of birth in ISO 8601 format (YYYY-MM-DD)
+          example: 1999-04-12
+        gender:
+          $ref: '#/components/schemas/Gender'
+        profession:
+          type: string
+          pattern: ^\D+$
+          example: Ausbilder
+        department:
+          type: string
+          pattern: ^[a-zA-Z\x7f-\xff-]+$
+          example: Informationstechnik
+        roomNumber:
+          type: string
+          pattern: ^\d{1,3}[.]\d{1,3}[.]\d{1,3}$
+          example: 2.3.12
+        accessRole:
+          $ref: '#/components/schemas/AccessRole'
+      required:
+        - firstName
+        - lastName
+        - username
         - password
         - gender
         - profession
@@ -219,7 +264,7 @@ components:
 
     Id:
       type: integer
-      format: int64
+      format: int32
       minimum: 1
       readOnly: true
       example: 123

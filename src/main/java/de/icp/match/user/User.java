@@ -1,9 +1,13 @@
-package de.icp.match.model;
+package de.icp.match.user;
 
 import com.sun.istack.NotNull;
 import de.icp.match.enums.AccessRole;
 import de.icp.match.enums.Gender;
+import de.icp.match.model.Conversation;
+import de.icp.match.model.Event;
+import de.icp.match.model.UserPreferences;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,9 +16,11 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name="\"user\"")
 public class User {
 
     @NotNull

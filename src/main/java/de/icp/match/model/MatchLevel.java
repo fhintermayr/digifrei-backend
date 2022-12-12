@@ -2,6 +2,7 @@ package de.icp.match.model;
 
 import com.sun.istack.NotNull;
 import de.icp.match.enums.MatchCategory;
+import de.icp.match.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
