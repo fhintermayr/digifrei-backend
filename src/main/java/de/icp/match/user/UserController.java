@@ -16,11 +16,13 @@ public class UserController implements UserApi {
 
     private final UserMapper userMapper;
     private final UserCreationService userCreationService;
+    private final UserQueryService userQueryService;
 
     @Autowired
-    public UserController(UserMapper userMapper, UserCreationService userCreationService) {
+    public UserController(UserMapper userMapper, UserCreationService userCreationService, UserQueryService userQueryService) {
         this.userMapper = userMapper;
         this.userCreationService = userCreationService;
+        this.userQueryService = userQueryService;
 
     }
 
@@ -50,6 +52,13 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<List<UserDto>> getAllUsers(Long maxResults) {
         return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> checkIfUsernameIsTaken(String username) {
+        return userQueryService.isUsernameTaken(username) ?
+                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     /**

@@ -67,6 +67,22 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
 
+  /user/{username}:
+    head:
+      operationId: checkIfUsernameIsTaken
+      summary: Checks if username is already taken
+      parameters:
+        - $ref: '#/components/parameters/username'
+      tags:
+        - User
+      responses:
+        200:
+          description: Username is taken
+
+        409:
+          description: Username is available
+
+
   /user/{userId}:
     parameters:
       - $ref: '#/components/parameters/userId'
@@ -124,6 +140,15 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/Id'
+
+    username:
+      name: username
+      description: The unique username of the user for whom the desired action should be performed
+      in: path
+      required: true
+      schema:
+        type: string
+        example: "john.doe"
 
     maxResults:
       name: max_results

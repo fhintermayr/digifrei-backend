@@ -4,6 +4,7 @@ import de.icp.match.JsonConverter;
 import de.icp.match.dto.AccessRoleDto;
 import de.icp.match.dto.GenderDto;
 import de.icp.match.dto.UserCreationDto;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class UserControllerTest {
+public class UserRegistrationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -31,6 +32,7 @@ public class UserControllerTest {
 
 
     @Test
+    @DisplayName("registering a user with all attributes provided returns the created user")
     public void registeringUser_withAllAttributesProvided_returnsCreatedUser() throws Exception {
 
         givenUserWithAllAttributes();
@@ -46,6 +48,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("registering a user with all optional attributes set to null returns the created user created user")
     public void registeringUser_withOptionalAttributesBeingNull_returnsCreatedUser() throws Exception {
 
         givenUserOptionalAttributesBeingNull();
@@ -61,6 +64,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("registering a user with required attributes set to null returns bad request status code")
     public void registeringUser_withRequiredAttributesBeingNull_returnsBadRequestError() throws Exception {
 
         givenUserRequiredAttributesBeingNull();

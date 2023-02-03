@@ -17,7 +17,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class DefaultUserCreationServiceTest {
+class UserCreationServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -25,7 +25,7 @@ class DefaultUserCreationServiceTest {
     private PasswordEncoder passwordEncoder;
     private User userToRegister;
     @InjectMocks
-    private DefaultUserCreationService userCreationService;
+    private UserCreationService userCreationService;
 
     @BeforeEach
     void setUp() {
