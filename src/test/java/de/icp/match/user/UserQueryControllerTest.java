@@ -12,7 +12,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -20,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class UserQueryControllerTest {
 
-    String sampleUsername = "max.muster";
+    String sampleUsername = "john.doe";
     User sampleUser = User.builder()
             .firstName("John")
             .lastName("Doe")
@@ -32,6 +35,19 @@ class UserQueryControllerTest {
             .department("IT")
             .roomNumber("1.1.1")
             .accessRole(AccessRole.MEMBER)
+            .build();
+
+    User secondSampleUser = User.builder()
+            .firstName("Max")
+            .lastName("Muster")
+            .username("max.muster")
+            .password("password123")
+            .dateOfBirth(LocalDate.of(2000, 1, 3))
+            .gender(Gender.DIVERSE)
+            .profession("Professional Idiot")
+            .department("IT")
+            .roomNumber("1.1.1")
+            .accessRole(AccessRole.ADMINISTRATOR)
             .build();
 
 
@@ -59,6 +75,43 @@ class UserQueryControllerTest {
         mockMvc.perform(head("/user/" + sampleUsername))
                 .andExpect(status().isConflict());
 
+    }
+
+    @Test
+    @DisplayName("querying all users with no search term provided returns a list of all users")
+    public void queryingAllUsers_withNoSearchTermProvided_returnsAllUsers() throws Exception {
+
+        insertUserIntoDatabase(sampleUser);
+        insertUserIntoDatabase(secondSampleUser);
+
+        mockMvc.perform(get("/user"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+
+    }
+
+    @Test
+    @DisplayName("querying all users with a search term returns a list of all users who match the search term")
+    public void queryingAllUsers_withSearchTermProvided_returnsUsersMatchingSearchTerm() throws Exception {
+
+        insertUserIntoDatabase(sampleUser);
+        insertUserIntoDatabase(secondSampleUser);
+
+        mockMvc.perform(get("/user").param("searchTerm", "doe"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("querying all users with a search term returns an empty list if no user matches the search term")
+    public void queryingAllUsers_withSearchTermProvided_returnsEmptyList() throws Exception {
+
+        insertUserIntoDatabase(sampleUser);
+        insertUserIntoDatabase(secondSampleUser);
+
+        mockMvc.perform(get("/user").param("searchTerm", "meier"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 
 

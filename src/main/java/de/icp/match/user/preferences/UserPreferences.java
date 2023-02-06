@@ -1,4 +1,4 @@
-package de.icp.match.model;
+package de.icp.match.user.preferences;
 
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;

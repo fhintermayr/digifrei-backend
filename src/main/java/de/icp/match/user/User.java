@@ -5,7 +5,7 @@ import de.icp.match.enums.AccessRole;
 import de.icp.match.enums.Gender;
 import de.icp.match.model.Conversation;
 import de.icp.match.model.Event;
-import de.icp.match.model.UserPreferences;
+import de.icp.match.user.preferences.UserPreferences;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

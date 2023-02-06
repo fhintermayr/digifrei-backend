@@ -18,12 +18,12 @@ public class UserController implements UserApi {
     private final UserCreationService userCreationService;
     private final UserQueryService userQueryService;
 
+
     @Autowired
     public UserController(UserMapper userMapper, UserCreationService userCreationService, UserQueryService userQueryService) {
         this.userMapper = userMapper;
         this.userCreationService = userCreationService;
         this.userQueryService = userQueryService;
-
     }
 
     /**
@@ -38,27 +38,26 @@ public class UserController implements UserApi {
         User userToRegister = userMapper.toUser(userCreationDto);
         User registeredUser = userCreationService.register(userToRegister);
 
-        UserDto registeredUserDto = userMapper.toUserDto(registeredUser);
+        UserDto registeredUserDto = userMapper.toDto(registeredUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredUserDto);
     }
 
-    /**
-     * GET /user/all : Returns all registered users
-     *
-     * @param maxResults The maximum number of results to be returned per page. This can be any number greater than 0.  (optional, default to 50)
-     * @return A list containing all registered application users (status code 200)
-     */
-    @Override
-    public ResponseEntity<List<UserDto>> getAllUsers(Long maxResults) {
-        return null;
-    }
 
     @Override
     public ResponseEntity<Void> checkIfUsernameIsTaken(String username) {
         return userQueryService.isUsernameTaken(username) ?
                 ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
+
+    @Override
+    public ResponseEntity<List<UserDto>> getAllUsersContainingSearchTerm(String searchTerm) {
+
+        List<User> foundUsers = userQueryService.findAllUsersContainingSearchTerm(searchTerm);
+        List<UserDto> userDtos = userMapper.toDto(foundUsers);
+
+        return ResponseEntity.ok(userDtos);
     }
 
     /**

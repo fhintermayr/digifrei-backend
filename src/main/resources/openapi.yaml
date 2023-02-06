@@ -36,7 +36,7 @@ paths:
         - User
       requestBody:
         required: true
-        description: Object containing all information about the user who should be saved in the application
+        description: Object containing all information about the user who should be registered
         content:
           application/json:
             schema:
@@ -49,17 +49,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
 
-  /user/all:
+  /user:
     get:
-      operationId: getAllUsers
-      summary: Returns all registered users
+      operationId: getAllUsersContainingSearchTerm
+      summary: Returns all users or users whose name or username contains a search term
       parameters:
-        - $ref: '#/components/parameters/maxResults'
+        - $ref: '#/components/parameters/searchTerm'
       tags:
         - User
       responses:
         200:
-          description: A list containing all registered application users
+          description: | 
+            A list containing all users whose name or username contains the specified search term.
+            If the search term is omitted, a list of all users will be returned.
+            If no user matches the search term, an empty list will be returned.
           content:
             application/json:
               schema:
@@ -78,10 +81,8 @@ paths:
       responses:
         200:
           description: Username is taken
-
         409:
           description: Username is available
-
 
   /user/{userId}:
     parameters:
@@ -150,8 +151,16 @@ components:
         type: string
         example: "john.doe"
 
+    searchTerm:
+      name: searchTerm
+      in: query
+      description: The term to search for in the user's name or username
+      required: false
+      schema:
+        type: string
+
     maxResults:
-      name: max_results
+      name: maxResults
       description: | 
         The maximum number of results to be returned per page.
         This can be any number greater than 0.
@@ -205,8 +214,8 @@ components:
           type: string
           pattern: ^\d{1,3}[.]\d{1,3}[.]\d{1,3}$
           example: 2.3.12
-        preferencesId:
-          $ref: '#/components/schemas/Id'
+        preferences:
+          $ref: '#/components/schemas/UserPreferences'
         accessRole:
           $ref: '#/components/schemas/AccessRole'
       required:
@@ -270,6 +279,41 @@ components:
         - department
         - accessRole
 
+    UserPreferences:
+      type: object
+      properties:
+        prefersMale:
+          type: boolean
+          description: Indicates if the user prefers male partners.
+          example: true
+        prefersFemale:
+          type: boolean
+          description: Indicates if the user prefers female partners.
+          example: false
+        prefersDiverse:
+          type: boolean
+          description: Indicates if the user prefers diverse partners.
+          example: true
+        smallestPreferredAge:
+          type: integer
+          format: byte
+          description: The smallest preferred age of the user.
+          example: 18
+        highestPreferredAge:
+          type: integer
+          format: byte
+          description: The highest preferred age of the user.
+          example: 35
+        id:
+          $ref: '#/components/schemas/Id'
+      required:
+        - prefersMale
+        - prefersFemale
+        - prefersDiverse
+        - smallestPreferredAge
+        - highestPreferredAge
+        - id
+
     Gender:
       type: string
       enum:
@@ -290,6 +334,7 @@ components:
     Id:
       type: integer
       format: int32
+      description: The unique identifier of the user preferences.
       minimum: 1
       readOnly: true
       example: 123
