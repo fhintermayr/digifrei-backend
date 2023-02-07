@@ -50,6 +50,19 @@ class UserQueryControllerTest {
             .accessRole(AccessRole.ADMINISTRATOR)
             .build();
 
+    User thirdSampleUser = User.builder()
+            .firstName("Jane")
+            .lastName("Doe")
+            .username("jane.doe")
+            .password("password123")
+            .dateOfBirth(LocalDate.of(2000, 1, 3))
+            .gender(Gender.DIVERSE)
+            .profession("Professional Idiot")
+            .department("IT")
+            .roomNumber("1.1.1")
+            .accessRole(AccessRole.MEMBER)
+            .build();
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -91,6 +104,18 @@ class UserQueryControllerTest {
     }
 
     @Test
+    @DisplayName("querying all users with a search term returns an empty list if no user matches the search term")
+    public void queryingAllUsers_withSearchTermProvided_returnsEmptyList() throws Exception {
+
+        insertUserIntoDatabase(sampleUser);
+        insertUserIntoDatabase(secondSampleUser);
+
+        mockMvc.perform(get("/user").param("searchTerm", "meier"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
     @DisplayName("querying all users with a search term returns a list of all users who match the search term")
     public void queryingAllUsers_withSearchTermProvided_returnsUsersMatchingSearchTerm() throws Exception {
 
@@ -103,15 +128,18 @@ class UserQueryControllerTest {
     }
 
     @Test
-    @DisplayName("querying all users with a search term returns an empty list if no user matches the search term")
-    public void queryingAllUsers_withSearchTermProvided_returnsEmptyList() throws Exception {
+    @DisplayName("querying all users with search term and with limit returns amount of users specified in limit")
+    public void queryAllUsersContainingSearchTermWithLimit() throws Exception {
 
         insertUserIntoDatabase(sampleUser);
-        insertUserIntoDatabase(secondSampleUser);
+        insertUserIntoDatabase(thirdSampleUser);
 
-        mockMvc.perform(get("/user").param("searchTerm", "meier"))
+        mockMvc.perform(get("/user")
+                        .param("searchTerm", "doe")
+                        .param("limit", "1"))
+
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
 

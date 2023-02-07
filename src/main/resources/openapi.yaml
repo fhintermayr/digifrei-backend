@@ -55,6 +55,7 @@ paths:
       summary: Returns all users or users whose name or username contains a search term
       parameters:
         - $ref: '#/components/parameters/searchTerm'
+        - $ref: '#/components/parameters/limit'
       tags:
         - User
       responses:
@@ -159,8 +160,8 @@ components:
       schema:
         type: string
 
-    maxResults:
-      name: maxResults
+    limit:
+      name: limit
       description: | 
         The maximum number of results to be returned per page.
         This can be any number greater than 0.
@@ -168,9 +169,9 @@ components:
       required: false
       schema:
         type: integer
-        format: int64
+        format: int32
         minimum: 1
-        default: 50
+        default: 10
         example: 69
 
 

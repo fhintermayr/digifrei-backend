@@ -52,9 +52,9 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<List<UserDto>> getAllUsersContainingSearchTerm(String searchTerm) {
+    public ResponseEntity<List<UserDto>> getAllUsersContainingSearchTerm(String searchTerm, Integer limit) {
 
-        List<User> foundUsers = userQueryService.findAllUsersContainingSearchTerm(searchTerm);
+        List<User> foundUsers = userQueryService.findAllUsersContainingSearchTerm(searchTerm, limit);
         List<UserDto> userDtos = userMapper.toDto(foundUsers);
 
         return ResponseEntity.ok(userDtos);
