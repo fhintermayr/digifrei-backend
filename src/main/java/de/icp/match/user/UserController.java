@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -54,10 +55,10 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<List<UserDto>> getAllUsersContainingSearchTerm(String searchTerm, Integer limit) {
 
-        List<User> foundUsers = userQueryService.findAllUsersContainingSearchTerm(searchTerm, limit);
-        List<UserDto> userDtos = userMapper.toDto(foundUsers);
+        List<User> foundUsers = userQueryService.loadAllUsersContainingSearchTerm(searchTerm, limit);
+        List<UserDto> userDTOs = userMapper.toDto(foundUsers);
 
-        return ResponseEntity.ok(userDtos);
+        return ResponseEntity.ok(userDTOs);
     }
 
     /**
@@ -68,7 +69,12 @@ public class UserController implements UserApi {
      */
     @Override
     public ResponseEntity<UserDto> getUserById(Integer userId) {
-        return null;
+
+        Optional<User> queriedUser =userQueryService.loadSingleUserById(userId);
+
+        return queriedUser
+                .map(user -> ResponseEntity.ok(userMapper.toDto(user)))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
 
     /**

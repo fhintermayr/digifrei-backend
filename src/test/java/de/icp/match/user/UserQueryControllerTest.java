@@ -142,6 +142,40 @@ class UserQueryControllerTest {
                 .andExpect(jsonPath("$", hasSize(1)));
     }
 
+    @Test
+    @DisplayName("querying a user with null as id returns 400 status code")
+    public void queryUser_WithIdNull_returnsBadRequest() throws Exception {
+
+        mockMvc.perform(get("/user/null"))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @DisplayName("querying a user by his id returns the user object")
+    public void queryUser_ById_returnsUser() throws Exception {
+
+        insertUserIntoDatabase(sampleUser);
+
+        mockMvc.perform(get("/user/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value(sampleUser.firstName))
+                .andExpect(jsonPath("$.username").value(sampleUser.username))
+                .andExpect(jsonPath("$.id").value(sampleUser.id));
+
+    }
+
+    @Test
+    @DisplayName("querying a user with non existing id returns 409 status code")
+    public void queryUser_WithNonExistingId_returnsConflict() throws Exception {
+
+        insertUserIntoDatabase(sampleUser);
+
+        mockMvc.perform(get("/user/2"))
+                .andExpect(status().isConflict());
+
+    }
+
 
     private void insertUserIntoDatabase(User user) {
         userRepository.save(user);

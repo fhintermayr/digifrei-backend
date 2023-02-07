@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class UserQueryService {
-
 
     private final UserRepository userRepository;
 
@@ -21,7 +21,7 @@ public class UserQueryService {
         return userRepository.existsByUsername(username);
     }
 
-    List<User> findAllUsersContainingSearchTerm(String searchTerm, Integer limit) {
+    List<User> loadAllUsersContainingSearchTerm(String searchTerm, Integer limit) {
         List<User> foundUsers = searchTerm == null ?
                 userRepository.findAll() :
                 userRepository.findUsersContaining(searchTerm);
@@ -31,6 +31,10 @@ public class UserQueryService {
                 .collect(Collectors.toList());
 
         return foundUsers;
+    }
+
+    Optional<User> loadSingleUserById(Integer userId) {
+        return userRepository.findById(userId);
     }
 
 }
