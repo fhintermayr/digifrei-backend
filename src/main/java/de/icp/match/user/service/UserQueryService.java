@@ -1,10 +1,12 @@
-package de.icp.match.user;
+package de.icp.match.user.service;
 
+import de.icp.match.user.model.User;
+import de.icp.match.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,11 +19,11 @@ public class UserQueryService {
         this.userRepository = userRepository;
     }
 
-    boolean isUsernameTaken(String username) {
+    public boolean isUsernameTaken(String username) {
         return userRepository.existsByUsername(username);
     }
 
-    List<User> loadAllUsersContainingSearchTerm(String searchTerm, Integer limit) {
+    public List<User> loadAllUsersContainingSearchTerm(String searchTerm, Integer limit) {
         List<User> foundUsers = searchTerm == null ?
                 userRepository.findAll() :
                 userRepository.findUsersContaining(searchTerm);
@@ -33,8 +35,8 @@ public class UserQueryService {
         return foundUsers;
     }
 
-    Optional<User> loadSingleUserById(Integer userId) {
-        return userRepository.findById(userId);
+    public User loadSingleUserById(Integer userId) {
+        return userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
     }
 
 }

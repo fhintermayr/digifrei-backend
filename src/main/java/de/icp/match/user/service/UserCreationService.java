@@ -1,5 +1,7 @@
-package de.icp.match.user;
+package de.icp.match.user.service;
 
+import de.icp.match.user.model.User;
+import de.icp.match.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,8 +20,8 @@ public class UserCreationService {
 
     public User register(User userToRegister) {
 
-       userToRegister.username = getUniqueUsername(userToRegister.username);
-       userToRegister.password = passwordEncoder.encode(userToRegister.password);
+       userToRegister.setUsername(getUniqueUsername(userToRegister.getUsername()));
+       userToRegister.setPassword(passwordEncoder.encode(userToRegister.getPassword()));
 
        // TODO: Add logging with AOP
        return userRepository.save(userToRegister);

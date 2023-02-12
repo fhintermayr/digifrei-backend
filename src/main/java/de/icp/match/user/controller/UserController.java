@@ -1,15 +1,21 @@
-package de.icp.match.user;
+package de.icp.match.user.controller;
 
 import de.icp.match.api.UserApi;
 import de.icp.match.dto.UserCreationDto;
 import de.icp.match.dto.UserDto;
+import de.icp.match.dto.UserUpdateDto;
+import de.icp.match.user.mapper.UserMapper;
+import de.icp.match.user.model.User;
+import de.icp.match.user.service.UserCreationService;
+import de.icp.match.user.service.UserQueryService;
+import de.icp.match.user.service.UserUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -18,13 +24,15 @@ public class UserController implements UserApi {
     private final UserMapper userMapper;
     private final UserCreationService userCreationService;
     private final UserQueryService userQueryService;
+    private final UserUpdateService userUpdateService;
 
 
     @Autowired
-    public UserController(UserMapper userMapper, UserCreationService userCreationService, UserQueryService userQueryService) {
+    public UserController(UserMapper userMapper, UserCreationService userCreationService, UserQueryService userQueryService, UserUpdateService userUpdateService) {
         this.userMapper = userMapper;
         this.userCreationService = userCreationService;
         this.userQueryService = userQueryService;
+        this.userUpdateService = userUpdateService;
     }
 
     /**
@@ -70,23 +78,36 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserDto> getUserById(Integer userId) {
 
-        Optional<User> queriedUser =userQueryService.loadSingleUserById(userId);
+        try {
+            User queriedUser =userQueryService.loadSingleUserById(userId);
+            return ResponseEntity.ok(userMapper.toDto(queriedUser));
+        }
 
-        return queriedUser
-                .map(user -> ResponseEntity.ok(userMapper.toDto(user)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT).build());
+        catch (EntityNotFoundException notFoundException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
     }
 
     /**
      * PUT /user/{userId} : Updates an existing user by his user id
      *
-     * @param userId  The numeric id of the user for whom the desired action should be performed (required)
-     * @param userDto The user object containing all the new data that should be replaced. You have to pass the old value of a property if it should not be replaced  (required)
+     * @param userUpdateDto The user object containing all the new data that should be replaced. You have to pass the old value of a property if it should not be replaced  (required)
      * @return The updated user containing the new data provided in the request body (status code 200)
      */
     @Override
-    public ResponseEntity<UserDto> updateUserById(Integer userId, UserDto userDto) {
-        return null;
+    public ResponseEntity<UserDto> updateUserById(Integer userId, UserUpdateDto userUpdateDto) {
+
+        try {
+            User currentlySavedUser = userQueryService.loadSingleUserById(userId);
+            User updatedUser = userUpdateService.updateGeneralAccountInformation(userUpdateDto, currentlySavedUser);
+
+            return ResponseEntity.ok(userMapper.toDto(updatedUser));
+        }
+
+        catch (EntityNotFoundException notFoundException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 
     /**

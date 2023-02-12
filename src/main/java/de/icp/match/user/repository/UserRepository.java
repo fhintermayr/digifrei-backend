@@ -1,5 +1,6 @@
-package de.icp.match.user;
+package de.icp.match.user.repository;
 
+import de.icp.match.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

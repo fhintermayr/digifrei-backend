@@ -1,8 +1,8 @@
-package de.icp.match.user;
+package de.icp.match.user.model;
 
 import com.sun.istack.NotNull;
-import de.icp.match.enums.AccessRole;
-import de.icp.match.enums.Gender;
+import de.icp.match.user.model.AccessRole;
+import de.icp.match.user.model.Gender;
 import de.icp.match.model.Conversation;
 import de.icp.match.model.Event;
 import de.icp.match.user.preferences.UserPreferences;

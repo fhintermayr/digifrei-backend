@@ -1,7 +1,9 @@
-package de.icp.match.user;
+package de.icp.match.user.service;
 
-import de.icp.match.enums.AccessRole;
-import de.icp.match.enums.Gender;
+import de.icp.match.user.repository.UserRepository;
+import de.icp.match.user.model.AccessRole;
+import de.icp.match.user.model.Gender;
+import de.icp.match.user.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,7 +54,7 @@ class UserCreationServiceTest {
 
         User registeredUser = userCreationService.register(userToRegister);
 
-        assertThat(registeredUser.username).isEqualTo(userToRegister.username);
+        assertThat(registeredUser.getUsername()).isEqualTo(userToRegister.getUsername());
     }
 
     @Test
@@ -61,7 +63,7 @@ class UserCreationServiceTest {
 
         User registeredUser = userCreationService.register(userToRegister);
 
-        assertThat(registeredUser.username).isEqualTo("john.doe1");
+        assertThat(registeredUser.getUsername()).isEqualTo("john.doe1");
     }
 
     @Test
@@ -70,7 +72,7 @@ class UserCreationServiceTest {
 
         User registeredUser = userCreationService.register(userToRegister);
 
-        assertThat(registeredUser.username).isEqualTo("john.doe2");
+        assertThat(registeredUser.getUsername()).isEqualTo("john.doe2");
     }
 
     @Test
@@ -79,37 +81,37 @@ class UserCreationServiceTest {
 
         User registeredUser = userCreationService.register(userToRegister);
 
-        assertThat(registeredUser.username).isEqualTo("john.doe12");
+        assertThat(registeredUser.getUsername()).isEqualTo("john.doe12");
     }
 
     @Test
     public void registeringUser_returnsUserWithEncryptedPassword() {
         givenUserWithAvailableUsername();
-        String providedPassword = userToRegister.password;
+        String providedPassword = userToRegister.getPassword();
 
         User registeredUser = userCreationService.register(userToRegister);
 
-        assertThat(registeredUser.password).isNotEqualTo(providedPassword);
+        assertThat(registeredUser.getPassword()).isNotEqualTo(providedPassword);
     }
 
 
     private void givenUserWithAvailableUsername() {
-        when(userRepository.existsByUsername(this.userToRegister.username)).thenReturn(false);
+        when(userRepository.existsByUsername(this.userToRegister.getUsername())).thenReturn(false);
     }
 
     private void givenUserWithTakenUsernameEndingWithNoDigit() {
-        when(userRepository.existsByUsername(this.userToRegister.username)).thenReturn(true);
+        when(userRepository.existsByUsername(this.userToRegister.getUsername())).thenReturn(true);
     }
 
     private void givenUserWithTakenUsernameEndingWithSingleDigit() {
-        this.userToRegister.username = "john.doe1";
+        this.userToRegister.setUsername("john.doe1");
 
-        when(userRepository.existsByUsername(this.userToRegister.username)).thenReturn(true);
+        when(userRepository.existsByUsername(this.userToRegister.getUsername())).thenReturn(true);
     }
 
     private void givenUserWithTakenUsernameEndingWithDoubleDigit() {
-        this.userToRegister.username ="john.doe11";
+        this.userToRegister.setUsername("john.doe11");
 
-        when(userRepository.existsByUsername(this.userToRegister.username)).thenReturn(true);
+        when(userRepository.existsByUsername(this.userToRegister.getUsername())).thenReturn(true);
     }
 }

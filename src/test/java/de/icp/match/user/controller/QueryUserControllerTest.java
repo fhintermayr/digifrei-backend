@@ -1,14 +1,12 @@
-package de.icp.match.user;
+package de.icp.match.user.controller;
 
-import de.icp.match.enums.AccessRole;
-import de.icp.match.enums.Gender;
+import de.icp.match.IntegrationTest;
+import de.icp.match.user.model.AccessRole;
+import de.icp.match.user.model.Gender;
+import de.icp.match.user.model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 
@@ -18,57 +16,56 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class UserQueryControllerTest {
+class QueryUserControllerTest extends IntegrationTest {
 
-    String sampleUsername = "john.doe";
-    User sampleUser = User.builder()
-            .firstName("John")
-            .lastName("Doe")
-            .username(sampleUsername)
-            .password("password123")
-            .dateOfBirth(LocalDate.of(2000, 1, 3))
-            .gender(Gender.DIVERSE)
-            .profession("Professional Idiot")
-            .department("IT")
-            .roomNumber("1.1.1")
-            .accessRole(AccessRole.MEMBER)
-            .build();
+    private String sampleUsername;
+    private User sampleUser;
+    private User secondSampleUser;
+    private User thirdSampleUser;
 
-    User secondSampleUser = User.builder()
-            .firstName("Max")
-            .lastName("Muster")
-            .username("max.muster")
-            .password("password123")
-            .dateOfBirth(LocalDate.of(2000, 1, 3))
-            .gender(Gender.DIVERSE)
-            .profession("Professional Idiot")
-            .department("IT")
-            .roomNumber("1.1.1")
-            .accessRole(AccessRole.ADMINISTRATOR)
-            .build();
+    @BeforeEach
+    void setUp() {
+        sampleUsername = "john.doe";
 
-    User thirdSampleUser = User.builder()
-            .firstName("Jane")
-            .lastName("Doe")
-            .username("jane.doe")
-            .password("password123")
-            .dateOfBirth(LocalDate.of(2000, 1, 3))
-            .gender(Gender.DIVERSE)
-            .profession("Professional Idiot")
-            .department("IT")
-            .roomNumber("1.1.1")
-            .accessRole(AccessRole.MEMBER)
-            .build();
+        sampleUser = User.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .username(sampleUsername)
+                .password("password123")
+                .dateOfBirth(LocalDate.of(2000, 1, 3))
+                .gender(Gender.DIVERSE)
+                .profession("Professional Idiot")
+                .department("IT")
+                .roomNumber("1.1.1")
+                .accessRole(AccessRole.MEMBER)
+                .build();
 
+        secondSampleUser = User.builder()
+                .firstName("Max")
+                .lastName("Muster")
+                .username("max.muster")
+                .password("password123")
+                .dateOfBirth(LocalDate.of(2000, 1, 3))
+                .gender(Gender.DIVERSE)
+                .profession("Professional Idiot")
+                .department("IT")
+                .roomNumber("1.1.1")
+                .accessRole(AccessRole.ADMINISTRATOR)
+                .build();
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private UserRepository userRepository;
-
+        thirdSampleUser = User.builder()
+                .firstName("Jane")
+                .lastName("Doe")
+                .username("jane.doe")
+                .password("password123")
+                .dateOfBirth(LocalDate.of(2000, 1, 3))
+                .gender(Gender.DIVERSE)
+                .profession("Professional Idiot")
+                .department("IT")
+                .roomNumber("1.1.1")
+                .accessRole(AccessRole.MEMBER)
+                .build();
+    }
 
     @Test
     @DisplayName("checking if username is taken returns 200 status code if it is taken")
@@ -159,9 +156,9 @@ class UserQueryControllerTest {
 
         mockMvc.perform(get("/user/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value(sampleUser.firstName))
-                .andExpect(jsonPath("$.username").value(sampleUser.username))
-                .andExpect(jsonPath("$.id").value(sampleUser.id));
+                .andExpect(jsonPath("$.firstName").value(sampleUser.getFirstName()))
+                .andExpect(jsonPath("$.username").value(sampleUser.getUsername()))
+                .andExpect(jsonPath("$.id").value(sampleUser.getId()));
 
     }
 
@@ -174,11 +171,6 @@ class UserQueryControllerTest {
         mockMvc.perform(get("/user/2"))
                 .andExpect(status().isConflict());
 
-    }
-
-
-    private void insertUserIntoDatabase(User user) {
-        userRepository.save(user);
     }
 
 }

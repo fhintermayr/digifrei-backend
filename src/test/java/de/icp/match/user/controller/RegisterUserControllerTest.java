@@ -1,17 +1,12 @@
-package de.icp.match.user;
+package de.icp.match.user.controller;
 
-import de.icp.match.JsonConverter;
+import de.icp.match.IntegrationTest;
 import de.icp.match.dto.AccessRoleDto;
 import de.icp.match.dto.GenderDto;
 import de.icp.match.dto.UserCreationDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 
@@ -19,15 +14,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class UserRegistrationControllerTest {
+public class RegisterUserControllerTest extends IntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private JsonConverter jsonConverter;
     private UserCreationDto userCreationDto;
 
 
