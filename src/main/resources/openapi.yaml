@@ -162,6 +162,37 @@ paths:
         409:
           description: User not found
 
+  /user/{userId}/access-role:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    put:
+      operationId: changeUsersAccessRole
+      summary: Endpoint for administrator to change a user's access role
+      tags:
+        - User
+      requestBody:
+        description: Request payload containing the new access role
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newAccessRole:
+                  $ref: '#/components/schemas/AccessRole'
+
+      responses:
+        200:
+          description: User with updated access role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          description: Unauthorized access
+        409:
+          description: User not found
+
 components:
 
   parameters:

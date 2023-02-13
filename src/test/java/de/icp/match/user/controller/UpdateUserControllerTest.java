@@ -2,6 +2,7 @@ package de.icp.match.user.controller;
 
 import de.icp.match.IntegrationTest;
 import de.icp.match.dto.AccessRoleDto;
+import de.icp.match.dto.ChangeUsersAccessRoleRequestDto;
 import de.icp.match.dto.GenderDto;
 import de.icp.match.dto.UserDto;
 import de.icp.match.user.model.AccessRole;
@@ -23,6 +24,7 @@ public class UpdateUserControllerTest extends IntegrationTest {
     private final String UPDATE_USER_PATH = "/user/";
     private User sampleUser;
     private UserDto sampleUserDto;
+    private ChangeUsersAccessRoleRequestDto administratorAccessRoleDto;
 
     @BeforeEach
     void setUp() {
@@ -50,6 +52,8 @@ public class UpdateUserControllerTest extends IntegrationTest {
                 .roomNumber(sampleUser.getRoomNumber())
                 .accessRole(AccessRoleDto.valueOf(sampleUser.getAccessRole().name()))
                 .id(1);
+
+        administratorAccessRoleDto = new ChangeUsersAccessRoleRequestDto().newAccessRole(AccessRoleDto.ADMINISTRATOR);
     }
 
 
@@ -94,5 +98,19 @@ public class UpdateUserControllerTest extends IntegrationTest {
                 .content(jsonConverter.toJson(sampleUserDto)))
 
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    @DisplayName("updating users access role returns the user with the new access role")
+    void changingUsersAccessRole_returnsUserWithUpdatedAccessRole() throws Exception {
+
+        insertUserIntoDatabase(sampleUser);
+
+        mockMvc.perform(put("/user/" + sampleUser.getId() + "/access-role")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonConverter.toJson(administratorAccessRoleDto)))
+
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accessRole").value("ADMINISTRATOR"));
     }
 }

@@ -1,11 +1,9 @@
 package de.icp.match.user.controller;
 
 import de.icp.match.api.UserApi;
-import de.icp.match.dto.ChangeUserPasswordRequestDto;
-import de.icp.match.dto.UserCreationDto;
-import de.icp.match.dto.UserDto;
-import de.icp.match.dto.UserUpdateDto;
+import de.icp.match.dto.*;
 import de.icp.match.user.mapper.UserMapper;
+import de.icp.match.user.model.AccessRole;
 import de.icp.match.user.model.User;
 import de.icp.match.user.service.UserCreationService;
 import de.icp.match.user.service.UserQueryService;
@@ -120,6 +118,25 @@ public class UserController implements UserApi {
             userUpdateService.changePassword(user, newPassword);
 
             return ResponseEntity.noContent().build();
+        }
+
+        catch (EntityNotFoundException notFoundException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+    }
+
+    @Override
+    public ResponseEntity<UserDto> changeUsersAccessRole(Integer userId, ChangeUsersAccessRoleRequestDto changeUsersAccessRoleRequestDto) {
+
+        try {
+            AccessRoleDto newAccessRoleDto = changeUsersAccessRoleRequestDto.getNewAccessRole();
+            AccessRole newAccessRole = AccessRole.valueOf(newAccessRoleDto.getValue());
+
+            User user = userQueryService.loadSingleUserById(userId);
+            User userWithUpdatedAccessRole = userUpdateService.changeAccessRole(user, newAccessRole);
+
+            return ResponseEntity.ok(userMapper.toDto(userWithUpdatedAccessRole));
         }
 
         catch (EntityNotFoundException notFoundException) {
