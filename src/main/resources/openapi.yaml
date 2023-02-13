@@ -133,6 +133,34 @@ paths:
         204:
           description: Specifies that deleting the user was performed successfully
 
+  /user/{userId}/password:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    put:
+      operationId: changeUserPassword
+      summary: Endpoint for administrator to change a user's password
+      tags:
+        - User
+      requestBody:
+        description: Request payload containing new password
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+                  format: password
+                  description: The new password for the user
+                  example: Sup3rS3r3t
+      responses:
+        204:
+          description: Password successfully changed
+        401:
+          description: Unauthorized access
+        409:
+          description: User not found
 
 components:
 

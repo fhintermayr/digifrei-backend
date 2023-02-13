@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.persistence.EntityNotFoundException;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -22,6 +24,10 @@ public abstract class IntegrationTest {
 
     protected void insertUserIntoDatabase(User user) {
         userRepository.save(user);
+    }
+
+    protected User loadUserFromDatabaseById(Integer userId) {
+        return userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
     }
 
 }

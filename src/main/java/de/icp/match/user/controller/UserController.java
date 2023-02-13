@@ -1,6 +1,7 @@
 package de.icp.match.user.controller;
 
 import de.icp.match.api.UserApi;
+import de.icp.match.dto.ChangeUserPasswordRequestDto;
 import de.icp.match.dto.UserCreationDto;
 import de.icp.match.dto.UserDto;
 import de.icp.match.dto.UserUpdateDto;
@@ -108,6 +109,23 @@ public class UserController implements UserApi {
         catch (EntityNotFoundException notFoundException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
+    }
+
+    @Override
+    public ResponseEntity<Void> changeUserPassword(Integer userId, ChangeUserPasswordRequestDto changeUserPasswordRequestDto) {
+
+        try {
+            String newPassword = changeUserPasswordRequestDto.getNewPassword();
+            User user = userQueryService.loadSingleUserById(userId);
+            userUpdateService.changePassword(user, newPassword);
+
+            return ResponseEntity.noContent().build();
+        }
+
+        catch (EntityNotFoundException notFoundException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
     }
 
     /**
