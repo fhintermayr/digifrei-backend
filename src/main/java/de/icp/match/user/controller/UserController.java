@@ -6,11 +6,13 @@ import de.icp.match.user.mapper.UserMapper;
 import de.icp.match.user.model.AccessRole;
 import de.icp.match.user.model.User;
 import de.icp.match.user.service.UserCreationService;
+import de.icp.match.user.service.UserDeletionService;
 import de.icp.match.user.service.UserQueryService;
 import de.icp.match.user.service.UserUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityNotFoundException;
@@ -18,20 +20,23 @@ import java.util.List;
 
 
 @RestController
+@CrossOrigin
 public class UserController implements UserApi {
 
     private final UserMapper userMapper;
     private final UserCreationService userCreationService;
     private final UserQueryService userQueryService;
     private final UserUpdateService userUpdateService;
+    private final UserDeletionService userDeletionService;
 
 
     @Autowired
-    public UserController(UserMapper userMapper, UserCreationService userCreationService, UserQueryService userQueryService, UserUpdateService userUpdateService) {
+    public UserController(UserMapper userMapper, UserCreationService userCreationService, UserQueryService userQueryService, UserUpdateService userUpdateService, UserDeletionService userDeletionService) {
         this.userMapper = userMapper;
         this.userCreationService = userCreationService;
         this.userQueryService = userQueryService;
         this.userUpdateService = userUpdateService;
+        this.userDeletionService = userDeletionService;
     }
 
     /**
@@ -153,6 +158,16 @@ public class UserController implements UserApi {
      */
     @Override
     public ResponseEntity<Void> deleteUserById(Integer userId) {
-        return null;
+
+        try {
+            userDeletionService.deleteUserById(userId);
+
+            return ResponseEntity.noContent().build();
+        }
+
+        catch (EntityNotFoundException notFoundException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
     }
 }

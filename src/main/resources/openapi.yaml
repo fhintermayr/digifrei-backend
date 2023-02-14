@@ -126,12 +126,14 @@ paths:
       parameters:
         - $ref: '#/components/parameters/userId'
       operationId: deleteUserById
-      summary: Deletes an existing user by his user id
+      summary: Deletes an existing user by his id
       tags:
         - User
       responses:
         204:
-          description: Specifies that deleting the user was performed successfully
+          description: Deleting the user was successful
+        409:
+          description: User not found
 
   /user/{userId}/password:
     parameters:
