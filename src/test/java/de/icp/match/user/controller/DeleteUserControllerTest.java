@@ -4,11 +4,11 @@ import de.icp.match.IntegrationTest;
 import de.icp.match.user.model.AccessRole;
 import de.icp.match.user.model.Gender;
 import de.icp.match.user.model.User;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;

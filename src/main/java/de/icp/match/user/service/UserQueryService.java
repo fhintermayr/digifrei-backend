@@ -2,10 +2,10 @@ package de.icp.match.user.service;
 
 import de.icp.match.user.model.User;
 import de.icp.match.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 

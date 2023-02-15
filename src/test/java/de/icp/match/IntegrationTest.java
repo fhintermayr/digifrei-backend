@@ -2,13 +2,12 @@ package de.icp.match;
 
 import de.icp.match.user.model.User;
 import de.icp.match.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-
-import javax.persistence.EntityNotFoundException;
 
 @SpringBootTest
 @AutoConfigureMockMvc

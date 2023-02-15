@@ -1,17 +1,15 @@
 package de.icp.match.user.model;
 
-import com.sun.istack.NotNull;
-import de.icp.match.user.model.AccessRole;
-import de.icp.match.user.model.Gender;
 import de.icp.match.model.Conversation;
 import de.icp.match.model.Event;
 import de.icp.match.user.preferences.UserPreferences;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Set;
 

@@ -61,10 +61,7 @@ public class UpdateUserControllerTest extends IntegrationTest {
     @DisplayName("returns 400 status code if no user is provided in the request body")
     public void providingNoUserInRequestBody_returnsBadRequest() throws Exception {
 
-        User emptyUser = new User();
-        insertUserIntoDatabase(emptyUser);
-
-        mockMvc.perform(put(UPDATE_USER_PATH + emptyUser.getId())
+        mockMvc.perform(put(UPDATE_USER_PATH + "1")
                 .contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isBadRequest());

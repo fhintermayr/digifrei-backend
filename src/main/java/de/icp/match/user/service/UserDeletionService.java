@@ -1,9 +1,8 @@
 package de.icp.match.user.service;
 
 import de.icp.match.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityNotFoundException;
 
 @Service
 public class UserDeletionService {

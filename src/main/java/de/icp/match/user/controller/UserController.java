@@ -9,13 +9,13 @@ import de.icp.match.user.service.UserCreationService;
 import de.icp.match.user.service.UserDeletionService;
 import de.icp.match.user.service.UserQueryService;
 import de.icp.match.user.service.UserUpdateService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 

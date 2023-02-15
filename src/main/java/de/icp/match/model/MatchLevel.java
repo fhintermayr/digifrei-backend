@@ -1,13 +1,12 @@
 package de.icp.match.model;
 
-import com.sun.istack.NotNull;
 import de.icp.match.enums.MatchCategory;
 import de.icp.match.user.model.User;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
