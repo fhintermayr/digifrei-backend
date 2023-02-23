@@ -2,7 +2,6 @@ package de.icp.match.security.config;
 
 import de.icp.match.security.JwtAuthenticationFilter;
 import de.icp.match.security.service.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,8 +20,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${server.servlet.context-path}")
-    private String API_BASE_PATH;
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -40,7 +37,7 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .csrf().disable()
-                .authorizeHttpRequests().requestMatchers(API_BASE_PATH + "/auth/**").permitAll()
+                .authorizeHttpRequests().requestMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .authenticationProvider(authenticationProvider())

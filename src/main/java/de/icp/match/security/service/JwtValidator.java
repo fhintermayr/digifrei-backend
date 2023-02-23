@@ -1,11 +1,11 @@
-package de.icp.match.security;
+package de.icp.match.security.service;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Date;
 
@@ -14,12 +14,11 @@ import java.util.Date;
 public class JwtValidator {
 
     private final JwtExtractor jwtExtractor;
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    private final JwtSecretProvider jwtSecretProvider;
 
-
-    public JwtValidator(JwtExtractor jwtExtractor) {
+    public JwtValidator(JwtExtractor jwtExtractor, JwtSecretProvider jwtSecretProvider) {
         this.jwtExtractor = jwtExtractor;
+        this.jwtSecretProvider = jwtSecretProvider;
     }
 
 
@@ -28,9 +27,11 @@ public class JwtValidator {
     }
 
     private boolean canTokenBeDecoded(String token) {
+
+        SecretKey signingKey = jwtSecretProvider.getSigningKey();
+
         try {
-            // FIXME: Deprecated
-            Jwts.parserBuilder().setSigningKey(jwtSecret).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token);
             return true;
         }
 

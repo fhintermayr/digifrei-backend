@@ -2,6 +2,7 @@ package de.icp.match;
 
 import de.icp.match.user.model.User;
 import de.icp.match.user.repository.UserRepository;
+import de.icp.match.user.service.UserCreationService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,9 +21,12 @@ public abstract class IntegrationTest {
     protected JsonConverter jsonConverter;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserCreationService userCreationService;
+
 
     protected void insertUserIntoDatabase(User user) {
-        userRepository.save(user);
+        userCreationService.register(user);
     }
 
     protected User loadUserFromDatabaseById(Integer userId) {

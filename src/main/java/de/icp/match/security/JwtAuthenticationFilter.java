@@ -1,5 +1,7 @@
 package de.icp.match.security;
 
+import de.icp.match.security.service.JwtExtractor;
+import de.icp.match.security.service.JwtValidator;
 import de.icp.match.security.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -52,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String jwt = getJwtFromRequest(authHeader);
+        String jwt = getJwtFromAuthHeader(authHeader);
 
         if (jwtValidator.isTokenValid(jwt)) authenticateUserWithJwt(jwt, request);
 
@@ -64,7 +66,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return authHeader == null || !authHeader.startsWith(JWT_PREFIX);
     }
 
-    private String getJwtFromRequest(String authHeader) {
+    private String getJwtFromAuthHeader(String authHeader) {
         return authHeader.substring(JWT_PREFIX.length());
     }
 

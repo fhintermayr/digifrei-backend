@@ -1,17 +1,20 @@
-package de.icp.match.security;
+package de.icp.match.security.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
 public class JwtExtractor {
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    private final JwtSecretProvider jwtSecretProvider;
+
+    public JwtExtractor(JwtSecretProvider jwtSecretProvider) {
+        this.jwtSecretProvider = jwtSecretProvider;
+    }
 
     public String getUsername(String token) {
         return getBody(token).getSubject();
@@ -22,8 +25,10 @@ public class JwtExtractor {
     }
 
     private Claims getBody(String token) {
-        // FIXME: setSigningKey() is deprecated
-        return Jwts.parserBuilder().setSigningKey(jwtSecret).build().parseClaimsJws(token).getBody();
+
+        SecretKey signingKey = jwtSecretProvider.getSigningKey();
+
+        return Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token).getBody();
     }
 
 }
