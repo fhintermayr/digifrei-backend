@@ -48,12 +48,10 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-                format: jwt
-                example: "eyJhbGciOiJIUzpXVCJ9.eyJzM5MDIyfQ.Sfl_adQssw5c"
+                $ref: '#/components/schemas/JwtResponse'
 
         401:
-          description: Wrong credentials
+          description: Invalid credentials
 
 
   /user/register:
@@ -393,6 +391,16 @@ components:
       required:
         - username
         - password
+
+    JwtResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          format: jwt
+          example: "eyJhbGciOiJIUzpXVCJ9.eyJzM5MDIyfQ.Sfl_adQssw5c"
+      required:
+        - token
 
     Gender:
       type: string

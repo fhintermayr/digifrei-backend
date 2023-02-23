@@ -1,6 +1,7 @@
 package de.icp.match.security.controller;
 
 import de.icp.match.api.AuthApi;
+import de.icp.match.dto.JwtResponseDto;
 import de.icp.match.dto.LoginCredentialsDto;
 import de.icp.match.security.service.JwtGenerator;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    public ResponseEntity<String> login(LoginCredentialsDto loginCredentialsDto) {
+    public ResponseEntity<JwtResponseDto> login(LoginCredentialsDto loginCredentialsDto) {
 
         String username = loginCredentialsDto.getUsername();
         String password = loginCredentialsDto.getPassword();
@@ -34,8 +35,9 @@ public class AuthController implements AuthApi {
             authenticationManager.authenticate(authToken);
 
             String generatedToken = jwtGenerator.generateTokenForUser(username);
+            JwtResponseDto jwtResponseDto = new JwtResponseDto().token(generatedToken);
 
-            return ResponseEntity.ok(generatedToken);
+            return ResponseEntity.ok(jwtResponseDto);
         }
 
         catch (BadCredentialsException e) {
