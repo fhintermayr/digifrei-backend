@@ -39,4 +39,9 @@ public class UserQueryService {
         return userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
     }
 
+    // TODO: Maybe define boundary interface for other services to access this method
+    public User loadUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(EntityNotFoundException::new);
+    }
+
 }

@@ -31,19 +31,21 @@ public class AuthController implements AuthApi {
         String password = loginCredentialsDto.getPassword();
 
         try {
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
-            authenticationManager.authenticate(authToken);
-
-            String generatedToken = jwtGenerator.generateTokenForUser(username);
-            JwtResponseDto jwtResponseDto = new JwtResponseDto().token(generatedToken);
-
-            return ResponseEntity.ok(jwtResponseDto);
+            attemptLoginWithCredentials(username, password);
         }
-
         catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
+        String generatedToken = jwtGenerator.generateTokenForUser(username);
+        JwtResponseDto jwtResponseDto = new JwtResponseDto().token(generatedToken);
+
+        return ResponseEntity.ok(jwtResponseDto);
+    }
+
+    private void attemptLoginWithCredentials(String username, String password) {
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+        authenticationManager.authenticate(authToken);
     }
 
 }

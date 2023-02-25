@@ -2,7 +2,6 @@ package de.icp.match.security.filter;
 
 import de.icp.match.security.service.JwtExtractor;
 import de.icp.match.security.service.JwtValidator;
-import de.icp.match.security.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,13 +23,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String JWT_PREFIX = "Bearer ";
     private final JwtValidator jwtValidator;
     private final JwtExtractor jwtExtractor;
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final UserDetailsService userDetailsService;
 
 
-    public JwtAuthenticationFilter(JwtValidator jwtValidator, JwtExtractor jwtExtractor, UserDetailsServiceImpl userDetailsServiceImpl) {
+    public JwtAuthenticationFilter(JwtValidator jwtValidator, JwtExtractor jwtExtractor, UserDetailsService userDetailsService) {
         this.jwtValidator = jwtValidator;
         this.jwtExtractor = jwtExtractor;
-        this.userDetailsServiceImpl = userDetailsServiceImpl;
+        this.userDetailsService = userDetailsService;
     }
 
 
@@ -74,15 +74,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String usernameFromToken = jwtExtractor.getUsername(token);
 
-        if (isAlreadySignedIn()) return;
+        if (isSecurityContextAlreadyInUse()) return;
 
-        UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(usernameFromToken);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(usernameFromToken);
 
         UsernamePasswordAuthenticationToken authToken = createAuthToken(request, userDetails);
         SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 
-    private boolean isAlreadySignedIn() {
+    private boolean isSecurityContextAlreadyInUse() {
         return SecurityContextHolder.getContext().getAuthentication() != null;
     }
 
