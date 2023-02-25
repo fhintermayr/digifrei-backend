@@ -1,4 +1,4 @@
-package de.icp.match.security;
+package de.icp.match.security.filter;
 
 import de.icp.match.security.service.JwtExtractor;
 import de.icp.match.security.service.JwtValidator;
