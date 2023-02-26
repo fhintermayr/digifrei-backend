@@ -49,10 +49,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/JwtResponse'
-
         401:
           description: Invalid credentials
 
+  /auth/user:
+    get:
+      operationId: getCurrentUser
+      summary: Get the current authenticated user
+      tags:
+        - Authentication
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          description: Unauthorized access
 
   /user/register:
     post:
