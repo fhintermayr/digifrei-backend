@@ -8,7 +8,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Apprentice extends Employee {
+public class Apprentice extends User {
 
     private String doc;
 

@@ -1,17 +1,15 @@
 package de.icp.match.user.model;
 
-import de.icp.match.model.Conversation;
-import de.icp.match.model.Event;
-import de.icp.match.user.preferences.UserPreferences;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -19,39 +17,20 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name="\"user\"")
-public class User {
+public abstract class User {
 
-    @NotNull
-    String firstName;
-    @NotNull
-    String lastName;
-    @NotNull
-    @Column(unique = true)
-    String username;
-    @NotNull
-    String password;
-    LocalDate dateOfBirth;
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    Gender gender;
-    @Lob
-    Byte[] profilePicture;
-    @NotNull
-    String profession;
-    @NotNull
-    String department;
-    String roomNumber;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_preferences_id", referencedColumnName = "id")
-    UserPreferences preferences;
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH} ,mappedBy = "participants")
-    Set<Event> participatingEvents;
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH} ,mappedBy = "participants")
-    Set<Conversation> participatingConversations;
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    AccessRole accessRole;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    @GeneratedValue
+    private UUID id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
 }
