@@ -2,13 +2,15 @@ package de.icp.match.user.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name="\"user\"")
-@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User {
 
     @Id
@@ -19,10 +21,15 @@ public abstract class User {
     private String email;
     private String password;
 
-    public User(String firstName, String lastName, String email, String password) {
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
+    public User(String firstName, String lastName, String email, String password, Department department) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.department = department;
     }
 }

@@ -13,8 +13,8 @@ import java.io.Serializable;
 public class ApprenticeCreateDto extends UserCreateDto implements Serializable {
     private String doc;
 
-    public ApprenticeCreateDto(String firstName, String lastName, String email, String password, String doc) {
-        super(firstName, lastName, email, password);
+    public ApprenticeCreateDto(String firstName, String lastName, String email, String password, String doc, Department department) {
+        super(firstName, lastName, email, password, department);
         this.doc = doc;
     }
 }
