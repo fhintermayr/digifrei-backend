@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 // Role hierarchies don't work as expected in spring security 6, so I had to add every role separately
                 .requestMatchers(HttpMethod.GET, "/user/{userId}").hasAnyAuthority("MEMBER", "ADMINISTRATOR")
-                .requestMatchers(HttpMethod.GET, "/user").hasAnyAuthority("MEMBER", "ADMINISTRATOR")
+                .requestMatchers(HttpMethod.GET, "/user").hasAnyAuthority("MEMBER", "ADMINISTRATOR", "APPRENTICE")
                 .requestMatchers("/user/**").hasAuthority("ADMINISTRATOR")
                 .anyRequest().authenticated()
                 .and()

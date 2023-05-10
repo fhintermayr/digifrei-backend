@@ -1,9 +1,9 @@
 package de.icp.match.user.controller;
 
-import de.icp.match.api.UserApi;
-import de.icp.match.dto.*;
+import de.icp.match.dto.ChangeUserPasswordRequestDto;
+import de.icp.match.dto.UserCreationDto;
+import de.icp.match.dto.UserUpdateDto;
 import de.icp.match.user.mapper.UserMapper;
-import de.icp.match.user.model.AccessRole;
 import de.icp.match.user.model.User;
 import de.icp.match.user.service.UserCreationService;
 import de.icp.match.user.service.UserDeletionService;
@@ -13,15 +13,12 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @CrossOrigin
-public class UserController implements UserApi {
+public class UserController {
 
     private final UserMapper userMapper;
     private final UserCreationService userCreationService;
@@ -45,33 +42,32 @@ public class UserController implements UserApi {
      * @param userCreationDto Object containing all information about the user who should be saved in the application (required)
      * @return The newly created user based on the information provided in the request body (status code 201)
      */
-    @Override
-    public ResponseEntity<UserDto> createUser(UserCreationDto userCreationDto) {
+    @PostMapping("user/register")
+    public ResponseEntity<User> createUser(@RequestBody UserCreationDto userCreationDto) {
 
         User userToRegister = userMapper.toUser(userCreationDto);
         User registeredUser = userCreationService.register(userToRegister);
 
-        UserDto registeredUserDto = userMapper.toDto(registeredUser);
+//        UserDto registeredUserDto = userMapper.toDto(registeredUser);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUserDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
     }
 
 
-    @Override
     public ResponseEntity<Void> checkIfUsernameIsTaken(String username) {
         return userQueryService.isUsernameTaken(username) ?
                 ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
-    @Override
-    public ResponseEntity<List<UserDto>> getAllUsersContainingSearchTerm(String searchTerm, Integer limit) {
-
-        List<User> foundUsers = userQueryService.loadAllUsersContainingSearchTerm(searchTerm, limit);
-        List<UserDto> userDTOs = userMapper.toDto(foundUsers);
-
-        return ResponseEntity.ok(userDTOs);
-    }
+//    @Override
+//    public ResponseEntity<List<UserDto>> getAllUsersContainingSearchTerm(String searchTerm, Integer limit) {
+//
+//        List<User> foundUsers = userQueryService.loadAllUsersContainingSearchTerm(searchTerm, limit);
+//        List<UserDto> userDTOs = userMapper.toDto(foundUsers);
+//
+//        return ResponseEntity.ok(userDTOs);
+//    }
 
     /**
      * GET /user/{userId} : Returns a user by his user id
@@ -79,12 +75,12 @@ public class UserController implements UserApi {
      * @param userId The numeric id of the user for whom the desired action should be performed (required)
      * @return All information about the user whose id was specified in the path parameter (status code 200)
      */
-    @Override
-    public ResponseEntity<UserDto> getUserById(Integer userId) {
+    @GetMapping("user/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
 
         try {
             User queriedUser =userQueryService.loadSingleUserById(userId);
-            return ResponseEntity.ok(userMapper.toDto(queriedUser));
+            return ResponseEntity.ok(queriedUser);
         }
 
         catch (EntityNotFoundException notFoundException) {
@@ -99,14 +95,14 @@ public class UserController implements UserApi {
      * @param userUpdateDto The user object containing all the new data that should be replaced. You have to pass the old value of a property if it should not be replaced  (required)
      * @return The updated user containing the new data provided in the request body (status code 200)
      */
-    @Override
-    public ResponseEntity<UserDto> updateUserById(Integer userId, UserUpdateDto userUpdateDto) {
+    @PutMapping("user/{userId}")
+    public ResponseEntity<User> updateUserById(@PathVariable Integer userId, @RequestBody UserUpdateDto userUpdateDto) {
 
         try {
             User currentlySavedUser = userQueryService.loadSingleUserById(userId);
             User updatedUser = userUpdateService.updateGeneralAccountInformation(userUpdateDto, currentlySavedUser);
 
-            return ResponseEntity.ok(userMapper.toDto(updatedUser));
+            return ResponseEntity.ok(updatedUser);
         }
 
         catch (EntityNotFoundException notFoundException) {
@@ -114,8 +110,8 @@ public class UserController implements UserApi {
         }
     }
 
-    @Override
-    public ResponseEntity<Void> changeUserPassword(Integer userId, ChangeUserPasswordRequestDto changeUserPasswordRequestDto) {
+    @PutMapping("user/{userId}/password")
+    public ResponseEntity<Void> changeUserPassword(@PathVariable Integer userId, @RequestBody ChangeUserPasswordRequestDto changeUserPasswordRequestDto) {
 
         try {
             String newPassword = changeUserPasswordRequestDto.getNewPassword();
@@ -131,24 +127,6 @@ public class UserController implements UserApi {
 
     }
 
-    @Override
-    public ResponseEntity<UserDto> changeUsersAccessRole(Integer userId, ChangeUsersAccessRoleRequestDto changeUsersAccessRoleRequestDto) {
-
-        try {
-            AccessRoleDto newAccessRoleDto = changeUsersAccessRoleRequestDto.getNewAccessRole();
-            AccessRole newAccessRole = AccessRole.valueOf(newAccessRoleDto.getValue());
-
-            User user = userQueryService.loadSingleUserById(userId);
-            User userWithUpdatedAccessRole = userUpdateService.changeAccessRole(user, newAccessRole);
-
-            return ResponseEntity.ok(userMapper.toDto(userWithUpdatedAccessRole));
-        }
-
-        catch (EntityNotFoundException notFoundException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-
-    }
 
     /**
      * DELETE /user/{userId} : Deletes an existing user by his user id
@@ -156,8 +134,8 @@ public class UserController implements UserApi {
      * @param userId The numeric id of the user for whom the desired action should be performed (required)
      * @return Specifies that deleting the user was performed successfully (status code 200)
      */
-    @Override
-    public ResponseEntity<Void> deleteUserById(Integer userId) {
+    @DeleteMapping("user/{userId}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable Integer userId) {
 
         try {
             userDeletionService.deleteUserById(userId);

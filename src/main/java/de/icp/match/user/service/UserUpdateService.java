@@ -2,7 +2,6 @@ package de.icp.match.user.service;
 
 import de.icp.match.dto.UserUpdateDto;
 import de.icp.match.user.mapper.UserUpdateMapper;
-import de.icp.match.user.model.AccessRole;
 import de.icp.match.user.model.User;
 import de.icp.match.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,11 +33,11 @@ public class UserUpdateService {
 
         userRepository.save(user);
     }
-
-    public User changeAccessRole(User user, AccessRole newAccessRole) {
-        user.setAccessRole(newAccessRole);
-
-        return userRepository.save(user);
-    }
+//
+//    public User changeAccessRole(User user, AccessRole newAccessRole) {
+//        user.setAccessRole(newAccessRole);
+//
+//        return userRepository.save(user);
+//    }
 
 }

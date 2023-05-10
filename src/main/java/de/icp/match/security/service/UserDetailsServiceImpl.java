@@ -1,7 +1,7 @@
 package de.icp.match.security.service;
 
-import de.icp.match.user.model.Employee;
-import de.icp.match.user.repository.EmployeeRepository;
+import de.icp.match.user.model.User;
+import de.icp.match.user.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,10 +13,10 @@ import java.util.Set;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
 
-    public UserDetailsServiceImpl(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         String usernameNotFoundErrorMessage = String.format("User %s does not exist", username);
 
         //TODO: Replace with findEmployeeService
-        Employee loadedUser = employeeRepository.findByEmail(username)
+        User loadedUser = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameNotFoundErrorMessage));
 
         String usersAuthority = loadedUser.getClass().getSimpleName().toUpperCase();

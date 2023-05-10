@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public class ChatMessage {
     @ManyToOne(optional = false)
     @JoinColumn(name = "conversation_id", referencedColumnName = "id")

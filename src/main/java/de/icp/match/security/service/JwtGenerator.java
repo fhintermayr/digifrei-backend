@@ -1,7 +1,7 @@
 package de.icp.match.security.service;
 
-import de.icp.match.user.model.Employee;
-import de.icp.match.user.repository.EmployeeRepository;
+import de.icp.match.user.model.User;
+import de.icp.match.user.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,14 +15,15 @@ import java.util.Date;
 @Service
 public class JwtGenerator {
 
-    private final EmployeeRepository employeeRepository;
     @Value("${jwt.validityInHours}")
     private int tokenValidityInHours;
     private final JwtSecretProvider jwtSecretProvider;
+    private final UserRepository userRepository;
 
-    public JwtGenerator(JwtSecretProvider jwtSecretProvider, EmployeeRepository employeeRepository) {
+    public JwtGenerator(JwtSecretProvider jwtSecretProvider,
+                        UserRepository userRepository) {
         this.jwtSecretProvider = jwtSecretProvider;
-        this.employeeRepository = employeeRepository;
+        this.userRepository = userRepository;
     }
 
     public String generateTokenForUser(String username) {
@@ -46,7 +47,7 @@ public class JwtGenerator {
 
     private String getAccessRoleOfUser(String username) {
         //TODO: Replace with findEmployeeService
-        Employee employee = employeeRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(""));
+        User employee = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(""));
         return employee.getClass().getSimpleName().toUpperCase();
     }
 

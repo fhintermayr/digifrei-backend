@@ -11,12 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/auth")
+@RestController
 @CrossOrigin
 public class AuthController {
 
@@ -32,8 +29,8 @@ public class AuthController {
         this.userMapperImpl = userMapperImpl;
     }
 
-    @PostMapping("login")
-    public ResponseEntity<JwtResponseDto> login(LoginCredentialsDto loginCredentialsDto) {
+    @PostMapping("auth/login")
+    public ResponseEntity<JwtResponseDto> login(@RequestBody LoginCredentialsDto loginCredentialsDto) {
 
         String username = loginCredentialsDto.getUsername();
         String password = loginCredentialsDto.getPassword();
@@ -52,7 +49,7 @@ public class AuthController {
     }
 
 
-    @GetMapping("user")
+    @GetMapping("auth/user")
     public ResponseEntity<User> getCurrentUser() {
         try {
             User currentlyAuthenticatedUser = currentUserService.getCurrentlyAuthenticatedUser();

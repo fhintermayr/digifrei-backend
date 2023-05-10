@@ -1,6 +1,5 @@
 package de.icp.match;
 
-import de.icp.match.user.model.Apprentice;
 import de.icp.match.user.model.User;
 import de.icp.match.user.repository.UserRepository;
 import org.springframework.boot.ApplicationArguments;
@@ -23,8 +22,9 @@ public class RootUserCreation implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args)  {
-        User emp = new Apprentice("foo", "bar", "mail", passwordEncoder.encode("pass"), "foo");
-        userRepository.save(emp);
+        User emp = new User( "bar", "mail", "mail", passwordEncoder.encode("pass"));
+
+        if (!userRepository.existsByEmail(emp.getEmail())) userRepository.save(emp);
     }
 
 }

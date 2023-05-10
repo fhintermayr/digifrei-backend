@@ -8,7 +8,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Employee {
     @Id
