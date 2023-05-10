@@ -1,10 +1,10 @@
 package de.icp.match.security.service;
 
-import de.icp.match.user.model.AccessRole;
-import de.icp.match.user.model.User;
-import de.icp.match.user.service.UserQueryService;
+import de.icp.match.user.model.Employee;
+import de.icp.match.user.repository.EmployeeRepository;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -15,19 +15,19 @@ import java.util.Date;
 @Service
 public class JwtGenerator {
 
-    private final UserQueryService userQueryService;
+    private final EmployeeRepository employeeRepository;
     @Value("${jwt.validityInHours}")
     private int tokenValidityInHours;
     private final JwtSecretProvider jwtSecretProvider;
 
-    public JwtGenerator(JwtSecretProvider jwtSecretProvider, UserQueryService userQueryService) {
+    public JwtGenerator(JwtSecretProvider jwtSecretProvider, EmployeeRepository employeeRepository) {
         this.jwtSecretProvider = jwtSecretProvider;
-        this.userQueryService = userQueryService;
+        this.employeeRepository = employeeRepository;
     }
 
     public String generateTokenForUser(String username) {
 
-        AccessRole usersAccessRole = getAccessRoleOfUser(username);
+        String usersAccessRole = getAccessRoleOfUser(username);
 
         Instant creationTimestamp = Instant.now();
         Instant expirationTimestamp = creationTimestamp.plus(tokenValidityInHours, ChronoUnit.HOURS);
@@ -36,7 +36,7 @@ public class JwtGenerator {
 
         return Jwts.builder()
                 .setSubject(username)
-                .claim("role", usersAccessRole.toString())
+                .claim("role", usersAccessRole)
                 .setIssuer("Stiftung ICP München")
                 .setIssuedAt(Date.from(creationTimestamp))
                 .setExpiration(Date.from(expirationTimestamp))
@@ -44,8 +44,10 @@ public class JwtGenerator {
                 .compact();
     }
 
-    private AccessRole getAccessRoleOfUser(String username) {
-        return userQueryService.loadUserByUsername(username).getAccessRole();
+    private String getAccessRoleOfUser(String username) {
+        //TODO: Replace with findEmployeeService
+        Employee employee = employeeRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(""));
+        return employee.getClass().getSimpleName().toUpperCase();
     }
 
 }
