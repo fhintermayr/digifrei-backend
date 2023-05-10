@@ -1,7 +1,7 @@
 package de.icp.match.security.service;
 
-import de.icp.match.user.model.User;
-import de.icp.match.user.repository.UserRepository;
+import de.icp.match.user.model.Employee;
+import de.icp.match.user.repository.EmployeeRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,10 +13,10 @@ import java.util.Set;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final EmployeeRepository employeeRepository;
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserDetailsServiceImpl(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
@@ -24,14 +24,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         String usernameNotFoundErrorMessage = String.format("User %s does not exist", username);
 
-        User loadedUser = userRepository.findByUsername(username)
+        //TODO: Replace with findEmployeeService
+        Employee loadedUser = employeeRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameNotFoundErrorMessage));
 
-        String usersAccessRoleAsString = loadedUser.getAccessRole().name();
-        Set<SimpleGrantedAuthority> usersAuthorities = Set.of(new SimpleGrantedAuthority(usersAccessRoleAsString));
+        String usersAuthority = loadedUser.getClass().getSimpleName().toUpperCase();
+
+        Set<SimpleGrantedAuthority> usersAuthorities = Set.of(new SimpleGrantedAuthority(usersAuthority));
 
         return new org.springframework.security.core.userdetails.User(
-                loadedUser.getUsername(),
+                loadedUser.getEmail(),
                 loadedUser.getPassword(),
                 usersAuthorities
         );
