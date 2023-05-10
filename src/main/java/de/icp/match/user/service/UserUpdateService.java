@@ -1,6 +1,6 @@
 package de.icp.match.user.service;
 
-import de.icp.match.dto.UserUpdateDto;
+import de.icp.match.user.model.UserUpdateDto;
 import de.icp.match.user.mapper.UserUpdateMapper;
 import de.icp.match.user.model.User;
 import de.icp.match.user.repository.UserRepository;

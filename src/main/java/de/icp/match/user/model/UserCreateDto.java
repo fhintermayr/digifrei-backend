@@ -21,13 +21,14 @@ public abstract class UserCreateDto implements Serializable {
     private String lastName;
     private String email;
     private String password;
+    private Department department;
 
-    public UserCreateDto(String firstName, String lastName, String email, String password) {
+    public UserCreateDto(String firstName, String lastName, String email, String password, Department department) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.department = department;
     }
-
 
 }

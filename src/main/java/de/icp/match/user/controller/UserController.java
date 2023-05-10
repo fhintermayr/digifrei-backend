@@ -1,7 +1,7 @@
 package de.icp.match.user.controller;
 
 import de.icp.match.user.dto.ChangeUserPasswordRequestDto;
-import de.icp.match.dto.UserUpdateDto;
+import de.icp.match.user.model.UserUpdateDto;
 import de.icp.match.user.mapper.UserMapper;
 import de.icp.match.user.model.User;
 import de.icp.match.user.model.UserCreateDto;

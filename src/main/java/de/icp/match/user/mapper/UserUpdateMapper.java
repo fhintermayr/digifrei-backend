@@ -1,6 +1,6 @@
 package de.icp.match.user.mapper;
 
-import de.icp.match.dto.UserUpdateDto;
+import de.icp.match.user.model.UserUpdateDto;
 import de.icp.match.user.model.User;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
