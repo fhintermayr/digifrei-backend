@@ -20,7 +20,7 @@ public class UserQueryService {
     }
 
     public boolean isUsernameTaken(String username) {
-        return userRepository.existsByUsername(username);
+        return userRepository.existsByEmail(username);
     }
 
     public List<User> loadAllUsersContainingSearchTerm(String searchTerm, Integer limit) {
@@ -41,7 +41,7 @@ public class UserQueryService {
 
     // TODO: Maybe define boundary interface for other services to access this method
     public User loadUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(EntityNotFoundException::new);
+        return userRepository.findByEmail(username).orElseThrow(EntityNotFoundException::new);
     }
 
 }

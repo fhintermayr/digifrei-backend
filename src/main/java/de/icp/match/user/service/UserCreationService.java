@@ -20,7 +20,7 @@ public class UserCreationService {
 
     public User register(User userToRegister) {
 
-       userToRegister.setUsername(getUniqueUsername(userToRegister.getUsername()));
+       userToRegister.setEmail(getUniqueUsername(userToRegister.getEmail()));
        userToRegister.setPassword(passwordEncoder.encode(userToRegister.getPassword()));
 
        // TODO: Add logging with AOP
@@ -60,6 +60,6 @@ public class UserCreationService {
     }
 
     private boolean isUsernameTaken(String username) {
-        return userRepository.existsByUsername(username);
+        return userRepository.existsByEmail(username);
     }
 }
