@@ -1,10 +1,10 @@
 package de.icp.match.user.controller;
 
-import de.icp.match.dto.ChangeUserPasswordRequestDto;
-import de.icp.match.dto.UserCreationDto;
+import de.icp.match.user.dto.ChangeUserPasswordRequestDto;
 import de.icp.match.dto.UserUpdateDto;
 import de.icp.match.user.mapper.UserMapper;
 import de.icp.match.user.model.User;
+import de.icp.match.user.model.UserCreateDto;
 import de.icp.match.user.service.UserCreationService;
 import de.icp.match.user.service.UserDeletionService;
 import de.icp.match.user.service.UserQueryService;
@@ -43,14 +43,19 @@ public class UserController {
      * @return The newly created user based on the information provided in the request body (status code 201)
      */
     @PostMapping("user/register")
-    public ResponseEntity<User> createUser(@RequestBody UserCreationDto userCreationDto) {
+    public ResponseEntity<User> createUser(@RequestBody UserCreateDto userCreationDto) {
 
-        User userToRegister = userMapper.toUser(userCreationDto);
-        User registeredUser = userCreationService.register(userToRegister);
+        try {
+            User userToRegister = userMapper.toUser(userCreationDto);
+            User registeredUser = userCreationService.register(userToRegister);
 
 //        UserDto registeredUserDto = userMapper.toDto(registeredUser);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
     }
 
 
@@ -114,7 +119,7 @@ public class UserController {
     public ResponseEntity<Void> changeUserPassword(@PathVariable Integer userId, @RequestBody ChangeUserPasswordRequestDto changeUserPasswordRequestDto) {
 
         try {
-            String newPassword = changeUserPasswordRequestDto.getNewPassword();
+            String newPassword = changeUserPasswordRequestDto.newPassword();
             User user = userQueryService.loadSingleUserById(userId);
             userUpdateService.changePassword(user, newPassword);
 

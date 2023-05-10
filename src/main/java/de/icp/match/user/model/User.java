@@ -1,19 +1,15 @@
 package de.icp.match.user.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name="\"user\"")
-public class User {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class User {
 
     @Id
     @GeneratedValue

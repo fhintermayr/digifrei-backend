@@ -1,17 +1,21 @@
 package de.icp.match.user.mapper;
 
-import de.icp.match.dto.UserCreationDto;
-import de.icp.match.dto.UserDto;
+
+import de.icp.match.user.model.Apprentice;
+import de.icp.match.user.model.ApprenticeCreateDto;
 import de.icp.match.user.model.User;
-import org.mapstruct.Mapper;
+import de.icp.match.user.model.UserCreateDto;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    User toUser(UserCreationDto userCreationDto);
+    User toUser(UserCreateDto userCreationDto);
 
-    User toEntity(UserDto userDto);
-
-    UserDto toDto(User user);
+    @ObjectFactory
+    default User createUser(UserCreateDto createDto) {
+        if (createDto instanceof ApprenticeCreateDto )return new Apprentice(createDto.getFirstName(), createDto.getLastName(), createDto.getEmail(), createDto.getPassword(), ((ApprenticeCreateDto) createDto).getDoc());
+        throw new RuntimeException("No matching object");
+    }
 
 }
