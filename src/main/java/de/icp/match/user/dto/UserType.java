@@ -1,4 +1,4 @@
-package de.icp.match.user.model;
+package de.icp.match.user.dto;
 
 public enum UserType {
     TRAINER,

@@ -28,8 +28,9 @@ public class RootUserCreation implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args)  {
         Department dep = new Department("dep");
+        Department dep2 = new Department("foo");
         User emp = new Apprentice( "bar", "mail", "mail", passwordEncoder.encode("pass"), dep,"foo");
-        User trainer = new Trainer( "bar", "mail", "mail2", passwordEncoder.encode("pass"), dep);
+        User trainer = new Trainer( "bar", "mail", "mail2", passwordEncoder.encode("pass"), dep2);
 
         if (!userRepository.existsByEmail(emp.getEmail())) userRepository.save(emp);
         if (!userRepository.existsByEmail(trainer.getEmail())) userRepository.save(trainer);

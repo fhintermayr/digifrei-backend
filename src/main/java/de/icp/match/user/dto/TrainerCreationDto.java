@@ -1,8 +1,8 @@
 package de.icp.match.user.dto;
 
 import de.icp.match.user.model.Trainer;
-import de.icp.match.user.model.UserType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -11,6 +11,7 @@ import java.util.UUID;
  * A DTO for the {@link Trainer} entity
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class TrainerCreationDto extends UserCreateDto implements Serializable {
     private final String firstName;
     private final String lastName;
