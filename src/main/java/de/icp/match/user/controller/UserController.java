@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @CrossOrigin
@@ -59,21 +61,26 @@ public class UserController {
 
     }
 
-
-    public ResponseEntity<Void> checkIfUsernameIsTaken(String username) {
-        return userQueryService.isUsernameTaken(username) ?
+    @RequestMapping(
+            method = RequestMethod.HEAD,
+            value = "user/{username}"
+    )
+    public ResponseEntity<Void> checkIfUsernameIsTaken(@PathVariable String username) {
+        return userQueryService.isEmailTaken(username) ?
                 ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
-//    @Override
-//    public ResponseEntity<List<UserDto>> getAllUsersContainingSearchTerm(String searchTerm, Integer limit) {
-//
-//        List<User> foundUsers = userQueryService.loadAllUsersContainingSearchTerm(searchTerm, limit);
-//        List<UserDto> userDTOs = userMapper.toDto(foundUsers);
-//
-//        return ResponseEntity.ok(userDTOs);
-//    }
+    @GetMapping("user")
+    public ResponseEntity<List<UserDto>> getAllUsersContainingSearchTerm(
+            @RequestParam(required = false) String searchTerm,
+            @RequestParam(required = false) Integer limit) {
+
+        List<User> foundUsers = userQueryService.loadAllUsersContainingSearchTerm(searchTerm, limit);
+        List<UserDto> foundUsersDto = foundUsers.stream().map(userMapper::toDto).toList();
+
+        return ResponseEntity.ok(foundUsersDto);
+    }
 
     /**
      * GET /user/{userId} : Returns a user by his user id

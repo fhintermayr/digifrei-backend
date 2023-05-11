@@ -19,7 +19,7 @@ public class UserQueryService {
         this.userRepository = userRepository;
     }
 
-    public boolean isUsernameTaken(String username) {
+    public boolean isEmailTaken(String username) {
         return userRepository.existsByEmail(username);
     }
 

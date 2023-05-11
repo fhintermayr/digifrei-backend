@@ -20,46 +20,16 @@ public class UserCreationService {
 
     public User register(User userToRegister) {
 
-       userToRegister.setEmail(getUniqueUsername(userToRegister.getEmail()));
-       userToRegister.setPassword(passwordEncoder.encode(userToRegister.getPassword()));
+       if (isEmailTaken(userToRegister.getPassword())) {
+           throw new IllegalArgumentException("User with email " + userToRegister.getEmail() + " already exists");
+       }
 
+       userToRegister.setPassword(passwordEncoder.encode(userToRegister.getPassword()));
        // TODO: Add logging with AOP
        return userRepository.save(userToRegister);
     }
 
-    private String getUniqueUsername(String username) {
-
-        String uniqueUsername = username;
-        int numberSuffix = endsWithNumber(username) ? getNumberSuffix(username) : 0;
-
-        // TODO: Refactor
-        while (isUsernameTaken(uniqueUsername)) {
-
-            numberSuffix++;
-            uniqueUsername = username.replaceAll("\\d+","") + numberSuffix;
-        }
-
-        return uniqueUsername;
-    }
-
-    private int getNumberSuffix(String username) {
-
-        String numberSuffixAsString = username.replaceAll("\\D+","");
-
-        return Integer.parseInt(numberSuffixAsString);
-    }
-
-    private boolean endsWithNumber(String input) {
-        char lastCharOfString = getLastCharOfString(input);
-
-        return Character.isDigit(lastCharOfString);
-    }
-
-    private char getLastCharOfString(String input) {
-        return input.charAt(input.length()-1);
-    }
-
-    private boolean isUsernameTaken(String username) {
+    private boolean isEmailTaken(String username) {
         return userRepository.existsByEmail(username);
     }
 }
