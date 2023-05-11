@@ -5,9 +5,10 @@ import de.icp.match.user.dto.ApprenticeCreateDto;
 import de.icp.match.user.dto.TrainerCreationDto;
 import de.icp.match.user.dto.UserCreateDto;
 import de.icp.match.user.model.*;
+import de.icp.match.user.service.DepartmentService;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {DepartmentService.class})
 public interface UserMapper {
 
     @Named("toUser")
@@ -26,7 +27,7 @@ public interface UserMapper {
     @Mapping(source = "departmentId", target = "department.id")
     Apprentice toApprentice(ApprenticeCreateDto apprenticeCreateDto);
 
-    @Mapping(source = "departmentId", target = "department.id")
+    @Mapping(source = "departmentId", target = "department")
 
     Trainer toTrainer(TrainerCreationDto trainerCreationDto);
 
