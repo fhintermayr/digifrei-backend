@@ -1,10 +1,10 @@
 package de.icp.match.user.controller;
 
 import de.icp.match.user.dto.ChangeUserPasswordRequestDto;
-import de.icp.match.user.model.UserUpdateDto;
+import de.icp.match.user.dto.UserUpdateDto;
 import de.icp.match.user.mapper.UserMapper;
 import de.icp.match.user.model.User;
-import de.icp.match.user.model.UserCreateDto;
+import de.icp.match.user.dto.UserCreateDto;
 import de.icp.match.user.service.UserCreationService;
 import de.icp.match.user.service.UserDeletionService;
 import de.icp.match.user.service.UserQueryService;

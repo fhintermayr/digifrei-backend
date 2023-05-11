@@ -1,8 +1,10 @@
-package de.icp.match.user.model;
+package de.icp.match.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import de.icp.match.user.model.Department;
+import de.icp.match.user.model.User;
 import lombok.Data;
 
 import java.io.Serializable;

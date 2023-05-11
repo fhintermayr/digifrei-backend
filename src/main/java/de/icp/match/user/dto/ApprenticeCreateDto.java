@@ -1,5 +1,7 @@
-package de.icp.match.user.model;
+package de.icp.match.user.dto;
 
+import de.icp.match.user.model.Apprentice;
+import de.icp.match.user.model.Department;
 import lombok.Getter;
 import lombok.Setter;
 

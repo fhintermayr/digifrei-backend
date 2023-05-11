@@ -1,6 +1,8 @@
 package de.icp.match.user.mapper;
 
 
+import de.icp.match.user.dto.ApprenticeCreateDto;
+import de.icp.match.user.dto.UserCreateDto;
 import de.icp.match.user.model.*;
 import org.mapstruct.*;
 
