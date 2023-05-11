@@ -1,6 +1,6 @@
 package de.icp.match.security.controller;
 
-import de.icp.match.LoginCredentialsDto;
+import de.icp.match.user.dto.LoginCredentialsDto;
 import de.icp.match.user.dto.JwtResponseDto;
 import de.icp.match.security.service.CurrentUserService;
 import de.icp.match.security.service.JwtGenerator;
