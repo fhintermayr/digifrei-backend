@@ -1,6 +1,7 @@
 package de.icp.match.user.controller;
 
 import de.icp.match.user.dto.ChangeUserPasswordRequestDto;
+import de.icp.match.user.dto.UserDto;
 import de.icp.match.user.dto.UserUpdateDto;
 import de.icp.match.user.mapper.UserMapper;
 import de.icp.match.user.model.User;
@@ -43,15 +44,15 @@ public class UserController {
      * @return The newly created user based on the information provided in the request body (status code 201)
      */
     @PostMapping("user/register")
-    public ResponseEntity<User> createUser(@RequestBody UserCreateDto userCreationDto) {
+    public ResponseEntity<UserDto> createUser(@RequestBody UserCreateDto userCreationDto) {
 
         try {
             User userToRegister = userMapper.toUser(userCreationDto);
             User registeredUser = userCreationService.register(userToRegister);
 
-//        UserDto registeredUserDto = userMapper.toDto(registeredUser);
+            UserDto registeredUserDto = userMapper.toDto(registeredUser);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(registeredUserDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
@@ -81,11 +82,11 @@ public class UserController {
      * @return All information about the user whose id was specified in the path parameter (status code 200)
      */
     @GetMapping("user/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable Integer userId) {
 
         try {
-            User queriedUser =userQueryService.loadSingleUserById(userId);
-            return ResponseEntity.ok(queriedUser);
+            User queriedUser = userQueryService.loadSingleUserById(userId);
+            return ResponseEntity.ok(userMapper.toDto(queriedUser));
         }
 
         catch (EntityNotFoundException notFoundException) {
@@ -101,13 +102,13 @@ public class UserController {
      * @return The updated user containing the new data provided in the request body (status code 200)
      */
     @PutMapping("user/{userId}")
-    public ResponseEntity<User> updateUserById(@PathVariable Integer userId, @RequestBody UserUpdateDto userUpdateDto) {
+    public ResponseEntity<UserDto> updateUserById(@PathVariable Integer userId, @RequestBody UserUpdateDto userUpdateDto) {
 
         try {
             User currentlySavedUser = userQueryService.loadSingleUserById(userId);
             User updatedUser = userUpdateService.updateGeneralAccountInformation(userUpdateDto, currentlySavedUser);
 
-            return ResponseEntity.ok(updatedUser);
+            return ResponseEntity.ok(userMapper.toDto(updatedUser));
         }
 
         catch (EntityNotFoundException notFoundException) {

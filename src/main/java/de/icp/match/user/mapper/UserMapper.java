@@ -1,9 +1,7 @@
 package de.icp.match.user.mapper;
 
 
-import de.icp.match.user.dto.ApprenticeCreateDto;
-import de.icp.match.user.dto.TrainerCreationDto;
-import de.icp.match.user.dto.UserCreateDto;
+import de.icp.match.user.dto.*;
 import de.icp.match.user.model.*;
 import de.icp.match.user.service.DepartmentService;
 import org.mapstruct.*;
@@ -15,11 +13,9 @@ public interface UserMapper {
     default User toUser(UserCreateDto userCreationDto) {
         if (userCreationDto.getUserType() == UserType.APPRENTICE) {
             return toApprentice((ApprenticeCreateDto) userCreationDto);
-        }
-        else if (userCreationDto.getUserType() == UserType.TRAINER) {
+        } else if (userCreationDto.getUserType() == UserType.TRAINER) {
             return toTrainer((TrainerCreationDto) userCreationDto);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Unknown UserCreateDto type");
         }
     }
@@ -28,7 +24,22 @@ public interface UserMapper {
     Apprentice toApprentice(ApprenticeCreateDto apprenticeCreateDto);
 
     @Mapping(source = "departmentId", target = "department")
-
     Trainer toTrainer(TrainerCreationDto trainerCreationDto);
+
+
+    @Named("toDto")
+    default UserDto toDto(User user) {
+        if (user instanceof Apprentice) {
+            return toDto((Apprentice) user);
+        } else if (user instanceof Trainer) {
+            return toDto((Trainer) user);
+        } else {
+            throw new IllegalArgumentException("Unknown User type");
+        }
+    }
+
+    ApprenticeDto toDto(Apprentice apprentice);
+
+    TrainerDto toDto(Trainer trainer);
 
 }
