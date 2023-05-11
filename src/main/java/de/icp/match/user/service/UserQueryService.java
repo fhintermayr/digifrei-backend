@@ -40,8 +40,8 @@ public class UserQueryService {
     }
 
     // TODO: Maybe define boundary interface for other services to access this method
-    public User loadUserByUsername(String username) {
-        return userRepository.findByEmail(username).orElseThrow(EntityNotFoundException::new);
+    public User loadUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
     }
 
 }

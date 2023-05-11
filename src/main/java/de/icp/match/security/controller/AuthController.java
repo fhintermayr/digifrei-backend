@@ -4,6 +4,7 @@ import de.icp.match.user.dto.JwtResponseDto;
 import de.icp.match.dto.LoginCredentialsDto;
 import de.icp.match.security.service.CurrentUserService;
 import de.icp.match.security.service.JwtGenerator;
+import de.icp.match.user.dto.UserDto;
 import de.icp.match.user.mapper.UserMapperImpl;
 import de.icp.match.user.model.User;
 import org.springframework.http.HttpStatus;
@@ -50,12 +51,12 @@ public class AuthController {
 
 
     @GetMapping("auth/user")
-    public ResponseEntity<User> getCurrentUser() {
+    public ResponseEntity<UserDto> getCurrentUser() {
         try {
             User currentlyAuthenticatedUser = currentUserService.getCurrentlyAuthenticatedUser();
-//            UserDto userDto = userMapperImpl.toDto(currentlyAuthenticatedUser);
+            UserDto userDto = userMapperImpl.toDto(currentlyAuthenticatedUser);
 
-            return ResponseEntity.ok(currentlyAuthenticatedUser);
+            return ResponseEntity.ok(userDto);
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
