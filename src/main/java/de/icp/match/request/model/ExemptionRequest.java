@@ -2,6 +2,7 @@ package de.icp.match.request.model;
 
 import de.icp.match.user.model.Apprentice;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,9 +20,11 @@ public class ExemptionRequest {
     @Column(name = "id", nullable = false)
     private UUID id;
 
+    @FutureOrPresent
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
+    @FutureOrPresent
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
 
@@ -38,6 +41,10 @@ public class ExemptionRequest {
     @ManyToOne(optional = false)
     @JoinColumn(name = "applicant_id", nullable = false)
     private Apprentice applicant;
+
+    @PrimaryKeyJoinColumn
+    @OneToOne(mappedBy = "exemptionRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    private RequestProcessing requestProcessing;
 
     public ExemptionRequest(LocalDateTime startTime, LocalDateTime endTime, String reason, ExemptionCategory exemptionCategory, Apprentice applicant) {
         this.startTime = startTime;
