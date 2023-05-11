@@ -1,5 +1,6 @@
 package de.icp.match.request.model;
 
+import de.icp.match.user.model.Trainer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Getter;
@@ -36,9 +37,14 @@ public class RequestProcessing {
     @Column(name = "processing_date", nullable = false)
     private LocalDateTime processing_date = LocalDateTime.now();
 
-    public RequestProcessing(ExemptionRequest exemptionRequest, ProcessingStatus processingStatus, String comment) {
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "processor_id", nullable = false)
+    private Trainer processor;
+
+    public RequestProcessing(ExemptionRequest exemptionRequest, ProcessingStatus processingStatus, String comment, Trainer processor) {
         this.exemptionRequest = exemptionRequest;
         this.processingStatus = processingStatus;
         this.comment = comment;
+        this.processor = processor;
     }
 }
