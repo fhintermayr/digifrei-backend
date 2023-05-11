@@ -10,14 +10,14 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
 
-    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 
     default List<User> findUsersContaining(String searchTerm) {
-        return findByFirstNameContainsOrLastNameContainsOrUsernameContainsAllIgnoreCaseOrderByFirstNameDesc(searchTerm, searchTerm, searchTerm);
+        return findByFirstNameContainsOrLastNameContainsOrEmailContainsAllIgnoreCaseOrderByFirstNameDesc(searchTerm, searchTerm, searchTerm);
     }
 
-    List<User> findByFirstNameContainsOrLastNameContainsOrUsernameContainsAllIgnoreCaseOrderByFirstNameDesc(String firstName, String lastName, String username);
+    List<User> findByFirstNameContainsOrLastNameContainsOrEmailContainsAllIgnoreCaseOrderByFirstNameDesc(String firstName, String lastName, String username);
 
 }

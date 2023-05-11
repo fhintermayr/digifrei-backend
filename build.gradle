@@ -2,7 +2,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.0.5'
 	id 'io.spring.dependency-management' version '1.1.0'
-	id "org.openapi.generator" version "6.4.0"
 }
 
 group = 'de.icp'
@@ -42,32 +41,3 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-openApiGenerate {
-	generatorName = "spring"
-	apiPackage = "de.icp.match.api"
-	modelPackage = "de.icp.match.dto"
-	modelNameSuffix = "Dto"
-
-	inputSpec = "$rootDir/src/main/resources/openapi.yaml"
-	outputDir = "$buildDir/generated"
-
-	generateModelTests = false
-	generateApiTests = false
-
-	configOptions = [
-			interfaceOnly: "true",
-			skipDefaultInterface: "true",
-			hideGenerationTimestamp: "true",
-			useSpringBoot3: "true",
-			openApiNullable: "false"
-	]
-}
-
-/* The interfaces which are generated from the api specification are generated to the build/generated directory
-	In order to get access to them from the main class path, I have created a source set which logically links the
-	main classpath with the build/generated class path
- */
-sourceSets.main.java.srcDirs = ['build/generated/src/main/java','src/main/java']
-
-compileJava.dependsOn tasks.openApiGenerate

@@ -20,7 +20,7 @@ public class CurrentUserService {
     public User getCurrentlyAuthenticatedUser() {
         String currentUsersName = getAuthenticatedUsersName();
 
-        return userQueryService.loadUserByUsername(currentUsersName);
+        return userQueryService.loadUserByEmail(currentUsersName);
     }
 
 

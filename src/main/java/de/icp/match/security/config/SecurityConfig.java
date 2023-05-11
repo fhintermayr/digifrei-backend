@@ -5,7 +5,6 @@ import de.icp.match.security.filter.JwtAuthenticationFilter;
 import de.icp.match.security.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -46,9 +45,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/**").permitAll()
                 // Role hierarchies don't work as expected in spring security 6, so I had to add every role separately
-                .requestMatchers(HttpMethod.GET, "/user/{userId}").hasAnyAuthority("MEMBER", "ADMINISTRATOR")
-                .requestMatchers(HttpMethod.GET, "/user").hasAnyAuthority("MEMBER", "ADMINISTRATOR")
-                .requestMatchers("/user/**").hasAuthority("ADMINISTRATOR")
+//                .requestMatchers(HttpMethod.GET, "/user/{userId}").hasAnyAuthority("MEMBER", "ADMINISTRATOR")
+//                .requestMatchers(HttpMethod.GET, "/user").hasAnyAuthority("MEMBER", "ADMINISTRATOR", "APPRENTICE")
+//                .requestMatchers("/user/**").hasAuthority("ADMINISTRATOR")
                 .anyRequest().authenticated()
                 .and()
 

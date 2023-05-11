@@ -1,57 +1,35 @@
 package de.icp.match.user.model;
 
-import de.icp.match.model.Conversation;
-import de.icp.match.model.Event;
-import de.icp.match.user.preferences.UserPreferences;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDate;
-import java.util.Set;
-
-@Data
-@Builder
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name="\"user\"")
-public class User {
+public abstract class User {
 
-    @NotNull
-    String firstName;
-    @NotNull
-    String lastName;
-    @NotNull
-    @Column(unique = true)
-    String username;
-    @NotNull
-    String password;
-    LocalDate dateOfBirth;
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    Gender gender;
-    @Lob
-    Byte[] profilePicture;
-    @NotNull
-    String profession;
-    @NotNull
-    String department;
-    String roomNumber;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_preferences_id", referencedColumnName = "id")
-    UserPreferences preferences;
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH} ,mappedBy = "participants")
-    Set<Event> participatingEvents;
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH} ,mappedBy = "participants")
-    Set<Conversation> participatingConversations;
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    AccessRole accessRole;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    @GeneratedValue
+    private Integer id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
+    public User(String firstName, String lastName, String email, String password, Department department) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.department = department;
+    }
 }

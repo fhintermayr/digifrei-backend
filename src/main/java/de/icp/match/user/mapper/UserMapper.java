@@ -1,36 +1,45 @@
 package de.icp.match.user.mapper;
 
-import de.icp.match.dto.UserCreationDto;
-import de.icp.match.dto.UserDto;
-import de.icp.match.model.Conversation;
-import de.icp.match.model.Event;
-import de.icp.match.user.model.User;
-import de.icp.match.user.preferences.UserPreferencesMapper;
-import org.mapstruct.Mapper;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import de.icp.match.user.dto.*;
+import de.icp.match.user.model.*;
+import de.icp.match.user.service.DepartmentService;
+import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {UserPreferencesMapper.class})
+@Mapper(componentModel = "spring", uses = {DepartmentService.class})
 public interface UserMapper {
 
-
-    User toUser(UserCreationDto userCreationDto);
-
-    User toEntity(UserDto userDto);
-
-    UserDto toDto(User user);
-
-    default Set<Integer> participatingEventsToParticipatingEventIds(Set<Event> participatingEvents) {
-        return participatingEvents.stream().map(Event::getId).collect(Collectors.toSet());
+    @Named("toUser")
+    default User toUser(UserCreateDto userCreationDto) {
+        if (userCreationDto.getUserType() == UserType.APPRENTICE) {
+            return toApprentice((ApprenticeCreateDto) userCreationDto);
+        } else if (userCreationDto.getUserType() == UserType.TRAINER) {
+            return toTrainer((TrainerCreationDto) userCreationDto);
+        } else {
+            throw new IllegalArgumentException("Unknown UserCreateDto type");
+        }
     }
 
-    default Set<Integer> participatingConversationsToParticipatingConversationIds(Set<Conversation> participatingConversations) {
-        return participatingConversations.stream().map(Conversation::getId).collect(Collectors.toSet());
+    @Mapping(source = "departmentId", target = "department")
+    Apprentice toApprentice(ApprenticeCreateDto apprenticeCreateDto);
+
+    @Mapping(source = "departmentId", target = "department")
+    Trainer toTrainer(TrainerCreationDto trainerCreationDto);
+
+
+    @Named("toDto")
+    default UserDto toDto(User user) {
+        if (user instanceof Apprentice) {
+            return toDto((Apprentice) user);
+        } else if (user instanceof Trainer) {
+            return toDto((Trainer) user);
+        } else {
+            throw new IllegalArgumentException("Unknown User type");
+        }
     }
 
-    List<UserDto> toDto(List<User> user);
+    ApprenticeDto toDto(Apprentice apprentice);
 
-    List<User> toEntity(List<UserDto> userDto);
+    TrainerDto toDto(Trainer trainer);
+
 }

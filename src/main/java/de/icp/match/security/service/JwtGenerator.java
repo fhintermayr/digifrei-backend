@@ -1,10 +1,10 @@
 package de.icp.match.security.service;
 
-import de.icp.match.user.model.AccessRole;
 import de.icp.match.user.model.User;
-import de.icp.match.user.service.UserQueryService;
+import de.icp.match.user.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -15,19 +15,20 @@ import java.util.Date;
 @Service
 public class JwtGenerator {
 
-    private final UserQueryService userQueryService;
     @Value("${jwt.validityInHours}")
     private int tokenValidityInHours;
     private final JwtSecretProvider jwtSecretProvider;
+    private final UserRepository userRepository;
 
-    public JwtGenerator(JwtSecretProvider jwtSecretProvider, UserQueryService userQueryService) {
+    public JwtGenerator(JwtSecretProvider jwtSecretProvider,
+                        UserRepository userRepository) {
         this.jwtSecretProvider = jwtSecretProvider;
-        this.userQueryService = userQueryService;
+        this.userRepository = userRepository;
     }
 
     public String generateTokenForUser(String username) {
 
-        AccessRole usersAccessRole = getAccessRoleOfUser(username);
+        String usersAccessRole = getAccessRoleOfUser(username);
 
         Instant creationTimestamp = Instant.now();
         Instant expirationTimestamp = creationTimestamp.plus(tokenValidityInHours, ChronoUnit.HOURS);
@@ -36,7 +37,7 @@ public class JwtGenerator {
 
         return Jwts.builder()
                 .setSubject(username)
-                .claim("role", usersAccessRole.toString())
+                .claim("role", usersAccessRole)
                 .setIssuer("Stiftung ICP München")
                 .setIssuedAt(Date.from(creationTimestamp))
                 .setExpiration(Date.from(expirationTimestamp))
@@ -44,8 +45,10 @@ public class JwtGenerator {
                 .compact();
     }
 
-    private AccessRole getAccessRoleOfUser(String username) {
-        return userQueryService.loadUserByUsername(username).getAccessRole();
+    private String getAccessRoleOfUser(String username) {
+        //TODO: Replace with findEmployeeService
+        User employee = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(""));
+        return employee.getClass().getSimpleName().toUpperCase();
     }
 
 }

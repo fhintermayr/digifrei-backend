@@ -24,14 +24,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         String usernameNotFoundErrorMessage = String.format("User %s does not exist", username);
 
-        User loadedUser = userRepository.findByUsername(username)
+        //TODO: Replace with findEmployeeService
+        User loadedUser = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameNotFoundErrorMessage));
 
-        String usersAccessRoleAsString = loadedUser.getAccessRole().name();
-        Set<SimpleGrantedAuthority> usersAuthorities = Set.of(new SimpleGrantedAuthority(usersAccessRoleAsString));
+        String usersAuthority = loadedUser.getClass().getSimpleName().toUpperCase();
+
+        Set<SimpleGrantedAuthority> usersAuthorities = Set.of(new SimpleGrantedAuthority(usersAuthority));
 
         return new org.springframework.security.core.userdetails.User(
-                loadedUser.getUsername(),
+                loadedUser.getEmail(),
                 loadedUser.getPassword(),
                 usersAuthorities
         );

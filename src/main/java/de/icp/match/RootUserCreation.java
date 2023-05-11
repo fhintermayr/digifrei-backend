@@ -1,51 +1,38 @@
 package de.icp.match;
 
-import de.icp.match.user.model.AccessRole;
-import de.icp.match.user.model.Gender;
+import de.icp.match.user.model.Apprentice;
+import de.icp.match.user.model.Department;
+import de.icp.match.user.model.Trainer;
 import de.icp.match.user.model.User;
 import de.icp.match.user.repository.UserRepository;
-import de.icp.match.user.service.UserCreationService;
+import jakarta.transaction.Transactional;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
 
 @Component
 @Profile("dev")
 public class RootUserCreation implements ApplicationRunner {
 
-    private final UserCreationService userCreationService;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public RootUserCreation(UserCreationService userCreationService, UserRepository userRepository) {
-        this.userCreationService = userCreationService;
+    public RootUserCreation(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
+    @Transactional
     public void run(ApplicationArguments args)  {
+        Department dep = new Department("dep");
+        User emp = new Apprentice( "bar", "mail", "mail", passwordEncoder.encode("pass"), dep,"foo");
+        User trainer = new Trainer( "bar", "mail", "mail2", passwordEncoder.encode("pass"), dep);
 
-            User rootUser = new User(
-                    "admin",
-                    "admin",
-                    "admin",
-                    "icp",
-                    LocalDate.now(),
-                    Gender.DIVERSE,
-                    null,
-                    "admin",
-                    "admin",
-                    "1.2.3",
-                    null,
-                    null,
-                    null,
-                    AccessRole.ADMINISTRATOR,
-                    1
-            );
-
-        if (!userRepository.existsByUsername(rootUser.getUsername())) userCreationService.register(rootUser);
+        if (!userRepository.existsByEmail(emp.getEmail())) userRepository.save(emp);
+        if (!userRepository.existsByEmail(trainer.getEmail())) userRepository.save(trainer);
     }
 
 }

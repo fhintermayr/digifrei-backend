@@ -1,11 +1,10 @@
 package de.icp.match.security.controller;
 
-import de.icp.match.api.AuthApi;
-import de.icp.match.dto.JwtResponseDto;
-import de.icp.match.dto.LoginCredentialsDto;
-import de.icp.match.dto.UserDto;
+import de.icp.match.LoginCredentialsDto;
+import de.icp.match.user.dto.JwtResponseDto;
 import de.icp.match.security.service.CurrentUserService;
 import de.icp.match.security.service.JwtGenerator;
+import de.icp.match.user.dto.UserDto;
 import de.icp.match.user.mapper.UserMapperImpl;
 import de.icp.match.user.model.User;
 import org.springframework.http.HttpStatus;
@@ -13,12 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
-public class AuthController implements AuthApi {
+public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtGenerator jwtGenerator;
@@ -32,11 +30,11 @@ public class AuthController implements AuthApi {
         this.userMapperImpl = userMapperImpl;
     }
 
-    @Override
-    public ResponseEntity<JwtResponseDto> login(LoginCredentialsDto loginCredentialsDto) {
+    @PostMapping("auth/login")
+    public ResponseEntity<JwtResponseDto> login(@RequestBody LoginCredentialsDto loginCredentialsDto) {
 
-        String username = loginCredentialsDto.getUsername();
-        String password = loginCredentialsDto.getPassword();
+        String username = loginCredentialsDto.username();
+        String password = loginCredentialsDto.password();
 
         try {
             attemptLoginWithCredentials(username, password);
@@ -46,12 +44,13 @@ public class AuthController implements AuthApi {
         }
 
         String generatedToken = jwtGenerator.generateTokenForUser(username);
-        JwtResponseDto jwtResponseDto = new JwtResponseDto().token(generatedToken);
+        JwtResponseDto jwtResponseDto = new JwtResponseDto(generatedToken);
 
         return ResponseEntity.ok(jwtResponseDto);
     }
 
-    @Override
+
+    @GetMapping("auth/user")
     public ResponseEntity<UserDto> getCurrentUser() {
         try {
             User currentlyAuthenticatedUser = currentUserService.getCurrentlyAuthenticatedUser();
