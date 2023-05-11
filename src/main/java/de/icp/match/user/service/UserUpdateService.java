@@ -22,9 +22,9 @@ public class UserUpdateService {
     }
 
     public User updateGeneralAccountInformation(UserUpdateDto userWithUpdatedData, User userToUpdate) {
-        User updatedUser = userUpdateMapper.partialUpdate(userWithUpdatedData, userToUpdate);
+        userUpdateMapper.partialUpdateUser(userWithUpdatedData, userToUpdate);
 
-        return userRepository.save(updatedUser);
+        return userRepository.save(userToUpdate);
     }
 
     public void changePassword(User user, String newPasswordAsPlainText) {

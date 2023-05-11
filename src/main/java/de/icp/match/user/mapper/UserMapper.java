@@ -7,12 +7,24 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    User toUser(UserCreateDto userCreationDto);
+    @Named("toUser")
+    default User toUser(UserCreateDto userCreationDto) {
+        if (userCreationDto instanceof ApprenticeCreateDto) {
+            return toApprentice((ApprenticeCreateDto) userCreationDto);
+        } else {
+            throw new IllegalArgumentException("Unknown UserCreateDto type");
+        }
+    }
 
-    @ObjectFactory
-    default User createUser(UserCreateDto createDto) {
-        if (createDto instanceof ApprenticeCreateDto )return new Apprentice(createDto.getFirstName(), createDto.getLastName(), createDto.getEmail(), createDto.getPassword(), new Department("f"),((ApprenticeCreateDto) createDto).getDoc());
-        throw new RuntimeException("No matching object");
+    default Apprentice toApprentice(ApprenticeCreateDto apprenticeCreateDto) {
+        return new Apprentice(
+                apprenticeCreateDto.getFirstName(),
+                apprenticeCreateDto.getLastName(),
+                apprenticeCreateDto.getEmail(),
+                apprenticeCreateDto.getPassword(),
+                apprenticeCreateDto.getDepartment(),
+                apprenticeCreateDto.getDoc()
+        );
     }
 
 }
