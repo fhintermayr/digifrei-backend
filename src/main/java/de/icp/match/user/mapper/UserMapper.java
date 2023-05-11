@@ -24,7 +24,7 @@ public interface UserMapper {
         }
     }
 
-    @Mapping(source = "departmentId", target = "department.id")
+    @Mapping(source = "departmentId", target = "department")
     Apprentice toApprentice(ApprenticeCreateDto apprenticeCreateDto);
 
     @Mapping(source = "departmentId", target = "department")
