@@ -1,7 +1,7 @@
 package de.icp.match.security.controller;
 
+import de.icp.match.LoginCredentialsDto;
 import de.icp.match.user.dto.JwtResponseDto;
-import de.icp.match.dto.LoginCredentialsDto;
 import de.icp.match.security.service.CurrentUserService;
 import de.icp.match.security.service.JwtGenerator;
 import de.icp.match.user.dto.UserDto;
@@ -33,8 +33,8 @@ public class AuthController {
     @PostMapping("auth/login")
     public ResponseEntity<JwtResponseDto> login(@RequestBody LoginCredentialsDto loginCredentialsDto) {
 
-        String username = loginCredentialsDto.getUsername();
-        String password = loginCredentialsDto.getPassword();
+        String username = loginCredentialsDto.username();
+        String password = loginCredentialsDto.password();
 
         try {
             attemptLoginWithCredentials(username, password);
