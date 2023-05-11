@@ -1,6 +1,7 @@
 package de.icp.match.user.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Setter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
