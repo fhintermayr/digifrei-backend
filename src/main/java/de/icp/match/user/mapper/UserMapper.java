@@ -16,7 +16,7 @@ public interface UserMapper {
         if (userCreationDto.getUserType() == UserType.APPRENTICE) {
             return toApprentice((ApprenticeCreateDto) userCreationDto);
         }
-        if (userCreationDto.getUserType() == UserType.TRAINER) {
+        else if (userCreationDto.getUserType() == UserType.TRAINER) {
             return toTrainer((TrainerCreationDto) userCreationDto);
         }
         else {

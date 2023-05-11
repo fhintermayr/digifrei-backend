@@ -4,16 +4,17 @@ import de.icp.match.user.model.Apprentice;
 import de.icp.match.user.dto.UserUpdateDto;
 import de.icp.match.user.model.Trainer;
 import de.icp.match.user.model.User;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import de.icp.match.user.service.DepartmentService;
+import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {DepartmentService.class})
 public interface UserUpdateMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(source = "departmentId", target = "department")
     void partialUpdate(UserUpdateDto userWithUpdatedData, @MappingTarget Apprentice apprenticeToUpdate);
+
+    @Mapping(source = "departmentId", target = "department")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void partialUpdate(UserUpdateDto userWithUpdatedData, @MappingTarget Trainer trainerToUpdate);
 
@@ -21,7 +22,7 @@ public interface UserUpdateMapper {
         if (userToUpdate instanceof Apprentice) {
             partialUpdate(userWithUpdatedData, (Apprentice) userToUpdate);
         }
-        if (userToUpdate instanceof Trainer) {
+        else if (userToUpdate instanceof Trainer) {
             partialUpdate(userWithUpdatedData, (Trainer) userToUpdate);
         }
         else {
