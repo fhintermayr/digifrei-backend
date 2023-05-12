@@ -6,17 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
 public class SocioEduExpert {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private UUID id;
+    private Long id;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;

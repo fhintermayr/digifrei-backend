@@ -1,11 +1,9 @@
 package de.icp.match.user.service;
 
 import de.icp.match.user.model.SocioEduExpert;
-import de.icp.match.user.model.SocioEduExpertRepository;
+import de.icp.match.user.repository.SocioEduExpertRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 public class SocioEduExpertService {
@@ -16,7 +14,7 @@ public class SocioEduExpertService {
         this.socioEduExpertRepository = socioEduExpertRepository;
     }
 
-    public SocioEduExpert findById(UUID uuid) {
-        return socioEduExpertRepository.findById(uuid).orElseThrow(EntityNotFoundException::new);
+    public SocioEduExpert findById(Long id) {
+        return socioEduExpertRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 }
