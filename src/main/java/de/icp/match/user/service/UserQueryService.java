@@ -1,5 +1,6 @@
 package de.icp.match.user.service;
 
+import de.icp.match.user.model.Apprentice;
 import de.icp.match.user.model.User;
 import de.icp.match.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,9 +40,17 @@ public class UserQueryService {
         return userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
     }
 
+    public Apprentice loadApprenticeById(Integer userId) {
+        return (Apprentice) userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+    }
+
     // TODO: Maybe define boundary interface for other services to access this method
     public User loadUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
+    }
+
+    public boolean doesUserExist(User user) {
+        return userRepository.existsById(user.getId());
     }
 
 }
