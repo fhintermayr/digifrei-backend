@@ -3,6 +3,7 @@ package de.icp.match.request.dto;
 import de.icp.match.request.model.ExemptionCategory;
 import de.icp.match.user.dto.ApprenticeDto;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.PastOrPresent;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ public record ExemptionRequestDto(
         UUID id,
         @FutureOrPresent LocalDateTime startTime,
         @FutureOrPresent LocalDateTime endTime,
-        LocalDateTime submissionDate,
+        @PastOrPresent LocalDateTime submissionDate,
         String reason,
         ExemptionCategory exemptionCategory,
         ApprenticeDto applicant,

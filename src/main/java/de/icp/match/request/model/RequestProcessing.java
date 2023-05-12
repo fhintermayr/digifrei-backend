@@ -2,7 +2,7 @@ package de.icp.match.request.model;
 
 import de.icp.match.user.model.Trainer;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,7 +33,7 @@ public class RequestProcessing {
     @Column(name = "comment")
     private String comment;
 
-    @FutureOrPresent
+    @PastOrPresent
     @Column(name = "processing_date", nullable = false)
     private LocalDateTime processing_date = LocalDateTime.now();
 

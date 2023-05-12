@@ -3,6 +3,7 @@ package de.icp.match.request.model;
 import de.icp.match.user.model.Apprentice;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,6 +29,7 @@ public class ExemptionRequest {
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
 
+    @PastOrPresent
     @Column(name = "submission_date", nullable = false)
     private LocalDateTime submissionDate = LocalDateTime.now();
 
