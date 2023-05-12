@@ -1,6 +1,5 @@
 package de.icp.match.user.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -15,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Apprentice extends User {
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "socio_edu_expert_id", nullable = false)
     private SocioEduExpert socioEduExpert;
 

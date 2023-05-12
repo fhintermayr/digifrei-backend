@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 /**
  * A DTO for the {@link Apprentice} entity
@@ -16,9 +15,9 @@ import java.util.UUID;
 @Setter
 public class ApprenticeCreateDto extends UserCreateDto implements Serializable {
 
-    private final UUID socioEduExpertId;
+    private final Long socioEduExpertId;
 
-    public ApprenticeCreateDto(String firstName, String lastName, String email, String password, UUID departmentId, UUID socioEduExpertId) {
+    public ApprenticeCreateDto(String firstName, String lastName, String email, String password, Long departmentId, Long socioEduExpertId) {
         super(firstName, lastName, email, password, departmentId, UserType.APPRENTICE);
         this.socioEduExpertId = socioEduExpertId;
     }
