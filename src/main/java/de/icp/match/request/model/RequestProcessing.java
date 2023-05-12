@@ -26,7 +26,6 @@ public class RequestProcessing {
     @JoinColumn(name = "exemption_request_id", nullable = false)
     private ExemptionRequest exemptionRequest;
 
-    @Enumerated
     @Column(name = "processing_status", nullable = false)
     private ProcessingStatus processingStatus;
 
