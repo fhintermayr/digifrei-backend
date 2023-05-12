@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 /**
  * A DTO for the {@link Trainer} entity
@@ -17,9 +16,9 @@ public class TrainerCreationDto extends UserCreateDto implements Serializable {
     private final String lastName;
     private final String email;
     private final String password;
-    private final UUID departmentId;
+    private final Long departmentId;
 
-    public TrainerCreationDto(String firstName, String lastName, String email, String password, UUID departmentId) {
+    public TrainerCreationDto(String firstName, String lastName, String email, String password, Long departmentId) {
         super(firstName, lastName, email, password, departmentId, UserType.TRAINER);
         this.firstName = firstName;
         this.lastName = lastName;

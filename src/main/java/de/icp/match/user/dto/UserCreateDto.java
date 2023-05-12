@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 /**
  * A DTO for the {@link User} entity
@@ -27,10 +26,10 @@ public abstract class UserCreateDto implements Serializable {
     private String lastName;
     private String email;
     private String password;
-    private UUID departmentId;
+    private Long departmentId;
     private UserType userType;
 
-    public UserCreateDto(String firstName, String lastName, String email, String password, UUID departmentId, UserType userType) {
+    public UserCreateDto(String firstName, String lastName, String email, String password, Long departmentId, UserType userType) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

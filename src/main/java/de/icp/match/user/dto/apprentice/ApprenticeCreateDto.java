@@ -18,7 +18,7 @@ public class ApprenticeCreateDto extends UserCreateDto implements Serializable {
 
     private final UUID socioEduExpertId;
 
-    public ApprenticeCreateDto(String firstName, String lastName, String email, String password, UUID departmentId, UUID socioEduExpertId) {
+    public ApprenticeCreateDto(String firstName, String lastName, String email, String password, Long departmentId, UUID socioEduExpertId) {
         super(firstName, lastName, email, password, departmentId, UserType.APPRENTICE);
         this.socioEduExpertId = socioEduExpertId;
     }
