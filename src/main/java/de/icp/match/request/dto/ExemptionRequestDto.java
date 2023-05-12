@@ -18,7 +18,7 @@ public record ExemptionRequestDto(
         @FutureOrPresent LocalDateTime endTime,
         @PastOrPresent LocalDateTime submissionDate,
         String reason,
-        ExemptionCategory exemptionCategoryName,
+        ExemptionCategory exemptionCategory,
         ApprenticeDto applicant,
         RequestProcessingDto requestProcessing
 ) implements Serializable {

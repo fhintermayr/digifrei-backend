@@ -38,7 +38,7 @@ public class ExemptionRequest {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "exemption_category_id", nullable = false)
-    private ExemptionCategoryEntity exemptionCategory;
+    private ExemptionCategory exemptionCategory;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "applicant_id", nullable = false)
@@ -48,7 +48,7 @@ public class ExemptionRequest {
     @OneToOne(mappedBy = "exemptionRequest", cascade = CascadeType.ALL, orphanRemoval = true)
     private RequestProcessing requestProcessing;
 
-    public ExemptionRequest(LocalDateTime startTime, LocalDateTime endTime, String reason, ExemptionCategoryEntity exemptionCategory, Apprentice applicant) {
+    public ExemptionRequest(LocalDateTime startTime, LocalDateTime endTime, String reason, ExemptionCategory exemptionCategory, Apprentice applicant) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.reason = reason;

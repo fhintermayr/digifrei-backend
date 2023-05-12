@@ -12,13 +12,10 @@ import org.mapstruct.*;
         uses = {UserMapper.class, RequestProcessingMapper.class, ExemptionCategoryService.class}
 )
 public interface ExemptionRequestMapper {
-    @Mapping(source = "exemptionCategoryName", target = "exemptionCategory")
     ExemptionRequest toEntity(ExemptionRequestDto exemptionRequestDto);
 
-    @Mapping(source = "exemptionCategory.name", target = "exemptionCategoryName")
     ExemptionRequestDto toDto(ExemptionRequest exemptionRequest);
 
-    @Mapping(source = "exemptionCategoryName", target = "exemptionCategory")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     ExemptionRequest partialUpdate(ExemptionRequestDto exemptionRequestDto, @MappingTarget ExemptionRequest exemptionRequest);
 
