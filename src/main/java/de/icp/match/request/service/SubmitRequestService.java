@@ -4,6 +4,7 @@ import de.icp.match.request.model.ExemptionRequest;
 import de.icp.match.request.repository.ExemptionRequestRepository;
 import de.icp.match.user.model.Apprentice;
 import de.icp.match.user.service.UserQueryService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class SubmitRequestService {
     }
 
 
-    public ExemptionRequest saveSubmission(ExemptionRequest submission) throws IllegalArgumentException {
+    public ExemptionRequest saveSubmission(ExemptionRequest submission) throws IllegalArgumentException, EntityNotFoundException {
 
         validateSubmissionProperties(submission);
         ExemptionRequest savedSubmission = exemptionRequestRepository.save(submission);
@@ -35,8 +36,7 @@ public class SubmitRequestService {
         }
 
         if (userDoesNotExist(submission.getApplicant())) {
-            String errorMessage = "Applicant does not exist";
-            throw new IllegalArgumentException(errorMessage);
+            throw new EntityNotFoundException("Applicant does not exist");
         }
     }
 
