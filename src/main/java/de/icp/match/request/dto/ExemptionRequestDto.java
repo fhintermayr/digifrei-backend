@@ -7,13 +7,12 @@ import jakarta.validation.constraints.PastOrPresent;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 /**
  * A DTO for the {@link de.icp.match.request.model.ExemptionRequest} entity
  */
 public record ExemptionRequestDto(
-        UUID id,
+        Long id,
         @FutureOrPresent LocalDateTime startTime,
         @FutureOrPresent LocalDateTime endTime,
         @PastOrPresent LocalDateTime submissionDate,
