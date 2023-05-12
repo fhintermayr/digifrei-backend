@@ -1,4 +1,4 @@
-package de.icp.match;
+package de.icp.match.user.dto;
 
 
 public record LoginCredentialsDto(

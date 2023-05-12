@@ -3,8 +3,8 @@ package de.icp.match.user.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import de.icp.match.user.dto.apprentice.ApprenticeCreateDto;
 import de.icp.match.user.model.User;
-import de.icp.match.user.model.UserType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

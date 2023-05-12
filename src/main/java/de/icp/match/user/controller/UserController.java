@@ -115,6 +115,8 @@ public class UserController {
             User currentlySavedUser = userQueryService.loadSingleUserById(userId);
             User updatedUser = userUpdateService.updateGeneralAccountInformation(userUpdateDto, currentlySavedUser);
 
+            //TODO: Add updating of apprentices socio edu expert
+
             return ResponseEntity.ok(userMapper.toDto(updatedUser));
         }
 

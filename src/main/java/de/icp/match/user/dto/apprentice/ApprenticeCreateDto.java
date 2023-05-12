@@ -1,7 +1,8 @@
-package de.icp.match.user.dto;
+package de.icp.match.user.dto.apprentice;
 
+import de.icp.match.user.dto.UserCreateDto;
+import de.icp.match.user.dto.UserType;
 import de.icp.match.user.model.Apprentice;
-import de.icp.match.user.model.UserType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,10 +15,11 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ApprenticeCreateDto extends UserCreateDto implements Serializable {
-    private String doc;
 
-    public ApprenticeCreateDto(String firstName, String lastName, String email, String password, String doc, UUID departmentId) {
+    private final UUID socioEduExpertId;
+
+    public ApprenticeCreateDto(String firstName, String lastName, String email, String password, UUID departmentId, UUID socioEduExpertId) {
         super(firstName, lastName, email, password, departmentId, UserType.APPRENTICE);
-        this.doc = doc;
+        this.socioEduExpertId = socioEduExpertId;
     }
 }
