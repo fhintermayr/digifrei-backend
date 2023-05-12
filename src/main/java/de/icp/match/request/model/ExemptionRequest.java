@@ -36,8 +36,8 @@ public class ExemptionRequest {
     @Column(name = "reason", nullable = false)
     private String reason;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "exemption_category_id", nullable = false)
+    @Enumerated
+    @Column(name = "exemption_category", nullable = false)
     private ExemptionCategory exemptionCategory;
 
     @ManyToOne(optional = false)
