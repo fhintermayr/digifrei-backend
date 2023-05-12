@@ -4,9 +4,10 @@ package de.icp.match.user.mapper;
 import de.icp.match.user.dto.*;
 import de.icp.match.user.model.*;
 import de.icp.match.user.service.DepartmentService;
+import de.icp.match.user.service.SocioEduExpertService;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {DepartmentService.class})
+@Mapper(componentModel = "spring", uses = {DepartmentService.class, SocioEduExpertService.class})
 public interface UserMapper {
 
     @Named("toUser")
@@ -21,6 +22,7 @@ public interface UserMapper {
     }
 
     @Mapping(source = "departmentId", target = "department")
+    @Mapping(source = "socioEduExpertId", target = "socioEduExpert")
     Apprentice toApprentice(ApprenticeCreateDto apprenticeCreateDto);
 
     @Mapping(source = "departmentId", target = "department")

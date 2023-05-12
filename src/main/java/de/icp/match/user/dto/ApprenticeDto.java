@@ -2,6 +2,7 @@ package de.icp.match.user.dto;
 
 
 import de.icp.match.user.model.Department;
+import de.icp.match.user.model.SocioEduExpert;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,12 +13,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ApprenticeDto extends UserDto {
-    private final String doc;
 
+    private final SocioEduExpert socioEduExpert;
 
-    public ApprenticeDto(Integer id, String firstName, String lastName, String email, Department department, String doc) {
+    public ApprenticeDto(Integer id, String firstName, String lastName, String email, Department department, SocioEduExpert socioEduExpert) {
         super(id, firstName, lastName, email, department);
-        this.doc = doc;
+        this.socioEduExpert = socioEduExpert;
     }
 
 }
