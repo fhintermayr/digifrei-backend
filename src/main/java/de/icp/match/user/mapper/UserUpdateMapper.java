@@ -10,7 +10,6 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {DepartmentService.class})
 public interface UserUpdateMapper {
 
-    //TODO: Add mapping for apprentices socio edu expert
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "departmentId", target = "department")
     void partialUpdate(UserUpdateDto userWithUpdatedData, @MappingTarget Apprentice apprenticeToUpdate);
