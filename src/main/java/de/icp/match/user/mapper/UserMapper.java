@@ -2,6 +2,8 @@ package de.icp.match.user.mapper;
 
 
 import de.icp.match.user.dto.*;
+import de.icp.match.user.dto.apprentice.ApprenticeCreateDto;
+import de.icp.match.user.dto.apprentice.ApprenticeDto;
 import de.icp.match.user.model.*;
 import de.icp.match.user.service.DepartmentService;
 import de.icp.match.user.service.SocioEduExpertService;

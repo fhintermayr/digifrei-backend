@@ -1,5 +1,7 @@
-package de.icp.match.user.dto;
+package de.icp.match.user.dto.apprentice;
 
+import de.icp.match.user.dto.UserCreateDto;
+import de.icp.match.user.dto.UserType;
 import de.icp.match.user.model.Apprentice;
 import lombok.Getter;
 import lombok.Setter;

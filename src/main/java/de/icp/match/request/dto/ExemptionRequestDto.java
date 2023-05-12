@@ -1,7 +1,7 @@
 package de.icp.match.request.dto;
 
 import de.icp.match.request.model.ExemptionCategory;
-import de.icp.match.user.dto.ApprenticeDto;
+import de.icp.match.user.dto.apprentice.ApprenticeDto;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.PastOrPresent;
 

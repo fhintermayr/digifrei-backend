@@ -1,6 +1,7 @@
-package de.icp.match.user.dto;
+package de.icp.match.user.dto.apprentice;
 
 
+import de.icp.match.user.dto.UserDto;
 import de.icp.match.user.model.Department;
 import de.icp.match.user.model.SocioEduExpert;
 import lombok.Getter;
