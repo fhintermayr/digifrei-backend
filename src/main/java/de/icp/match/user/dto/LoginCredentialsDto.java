@@ -2,7 +2,7 @@ package de.icp.match.user.dto;
 
 
 public record LoginCredentialsDto(
-        String username,
+        String email,
         String password
 ) {
 }
