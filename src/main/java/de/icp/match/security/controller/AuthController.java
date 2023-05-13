@@ -33,7 +33,7 @@ public class AuthController {
     @PostMapping("auth/login")
     public ResponseEntity<JwtResponseDto> login(@RequestBody LoginCredentialsDto loginCredentialsDto) {
 
-        String username = loginCredentialsDto.username();
+        String username = loginCredentialsDto.email();
         String password = loginCredentialsDto.password();
 
         try {
