@@ -4,6 +4,7 @@ import de.icp.match.request.model.ExemptionCategory;
 import de.icp.match.request.model.ExemptionRequest;
 import de.icp.match.request.repository.ExemptionRequestRepository;
 import de.icp.match.user.model.*;
+import de.icp.match.user.repository.SocioEduExpertRepository;
 import de.icp.match.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.ApplicationArguments;
@@ -21,12 +22,14 @@ public class RootUserCreation implements ApplicationRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ExemptionRequestRepository exemptionRequestRepository;
+    private final SocioEduExpertRepository socioEduExpertRepository;
 
     public RootUserCreation(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                            ExemptionRequestRepository exemptionRequestRepository) {
+                            ExemptionRequestRepository exemptionRequestRepository, SocioEduExpertRepository socioEduExpertRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.exemptionRequestRepository = exemptionRequestRepository;
+        this.socioEduExpertRepository = socioEduExpertRepository;
     }
 
     @Override
@@ -35,6 +38,8 @@ public class RootUserCreation implements ApplicationRunner {
         Department dep = new Department("dep");
         Department dep2 = new Department("foo");
         SocioEduExpert see = new SocioEduExpert("hans", "wurst", "foo@bar.com");
+
+        socioEduExpertRepository.save(see);
 
         Apprentice emp = new Apprentice( "bar", "mail", "mail", passwordEncoder.encode("pass"), dep,see);
         Trainer trainer = new Trainer( "bar", "mail", "mail2", passwordEncoder.encode("pass"), dep2);
