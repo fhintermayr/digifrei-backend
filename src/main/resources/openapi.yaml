@@ -92,7 +92,7 @@ paths:
   /user:
     get:
       operationId: getAllUsersContainingSearchTerm
-      summary: Returns all users or users whose name or username contains a search term
+      summary: Returns all users or users whose name or email contains a search term
       parameters:
         - $ref: '#/components/parameters/searchTerm'
         - $ref: '#/components/parameters/limit'
@@ -114,7 +114,7 @@ paths:
   /user/{username}:
     head:
       operationId: checkIfUsernameIsTaken
-      summary: Checks if username is already taken
+      summary: Checks if email is already taken
       parameters:
         - $ref: '#/components/parameters/username'
       tags:
@@ -247,8 +247,8 @@ components:
         $ref: '#/components/schemas/Id'
 
     username:
-      name: username
-      description: The unique username of the user for whom the desired action should be performed
+      name: email
+      description: The unique email of the user for whom the desired action should be performed
       in: path
       required: true
       schema:
@@ -258,7 +258,7 @@ components:
     searchTerm:
       name: searchTerm
       in: query
-      description: The term to search for in the user's name or username
+      description: The term to search for in the user's name or email
       required: false
       schema:
         type: string

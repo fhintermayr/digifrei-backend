@@ -5,6 +5,8 @@ import de.icp.match.user.repository.DepartmentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DepartmentService {
 
@@ -17,5 +19,9 @@ public class DepartmentService {
 
     public Department findById(Long departmentId) {
         return departmentRepository.findById(departmentId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    public List<Department> loadAllDepartments() {
+        return departmentRepository.findAll();
     }
 }
