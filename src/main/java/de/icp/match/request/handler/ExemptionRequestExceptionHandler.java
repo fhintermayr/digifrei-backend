@@ -19,6 +19,16 @@ public class ExemptionRequestExceptionHandler {
         return ResponseEntity.badRequest().build();
     }
 
+    @ExceptionHandler(ClassCastException.class)
+    public ResponseEntity<Void> handleClassCastException(Exception exception) {
+
+        log.error("Tried to get exemption requests of a trainer: {} - {}",
+                exception.getClass().getName(),
+                exception.getMessage());
+
+        return ResponseEntity.internalServerError().build();
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Void> handleUnknownException(Exception exception) {
 
