@@ -39,13 +39,22 @@ public class ExemptionRequestController {
                 .body(savedSubmissionDto);
     }
 
-    @GetMapping("exemption")
+    @GetMapping("exemption/self")
     public ResponseEntity<List<ExemptionRequestDto>> getAllSelfSubmittedRequests() {
 
         List<ExemptionRequest> selfSubmittedRequests = requestQueryService.loadSelfSubmittedRequests();
         List<ExemptionRequestDto> selfSubmittedRequestsDto = selfSubmittedRequests.stream().map(exemptionRequestMapper::toDto).toList();
 
         return ResponseEntity.ok(selfSubmittedRequestsDto);
+    }
+
+    @GetMapping("exemption/own-department")
+    public ResponseEntity<List<ExemptionRequestDto>> getAllRequestOfTrainersDepartment() {
+
+        List<ExemptionRequest> requestsOfAuthenticatedTrainersDepartment = requestQueryService.loadRequestsOfTrainersDepartment();
+        List<ExemptionRequestDto> trainersDepartmentRequestsDto = requestsOfAuthenticatedTrainersDepartment.stream().map(exemptionRequestMapper::toDto).toList();
+
+        return ResponseEntity.ok(trainersDepartmentRequestsDto);
     }
 
 }
