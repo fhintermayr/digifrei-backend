@@ -1,16 +1,19 @@
 package de.icp.match.request.mapper;
 
 import de.icp.match.request.dto.ExemptionRequestDto;
+import de.icp.match.request.dto.ExemptionRequestSubmissionDto;
 import de.icp.match.request.model.ExemptionRequest;
 import de.icp.match.request.model.RequestProcessing;
 import de.icp.match.user.mapper.UserMapper;
+import de.icp.match.user.service.UserQueryService;
 import org.mapstruct.*;
 
 @Mapper(
         unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING,
-        uses = {UserMapper.class, RequestProcessingMapper.class}
+        uses = {UserMapper.class, RequestProcessingMapper.class, UserQueryService.class}
 )
 public interface ExemptionRequestMapper {
+
     ExemptionRequest toEntity(ExemptionRequestDto exemptionRequestDto);
 
     ExemptionRequestDto toDto(ExemptionRequest exemptionRequest);
@@ -25,4 +28,7 @@ public interface ExemptionRequestMapper {
             requestProcessing.setExemptionRequest(exemptionRequest);
         }
     }
+
+    @Mapping(source = "applicantId", target = "applicant")
+    ExemptionRequest toEntity(ExemptionRequestSubmissionDto exemptionRequestSubmissionDto);
 }

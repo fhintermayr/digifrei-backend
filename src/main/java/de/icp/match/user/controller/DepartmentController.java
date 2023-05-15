@@ -3,11 +3,13 @@ package de.icp.match.user.controller;
 import de.icp.match.user.model.Department;
 import de.icp.match.user.service.DepartmentService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 public class DepartmentController {
 
