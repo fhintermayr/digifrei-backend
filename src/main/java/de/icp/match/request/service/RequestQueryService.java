@@ -7,6 +7,7 @@ import de.icp.match.user.model.Apprentice;
 import de.icp.match.user.model.User;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -23,9 +24,12 @@ public class RequestQueryService {
     public List<ExemptionRequest> loadSelfSubmittedRequests() throws ClassCastException {
 
         User authenticatedUser = currentUserService.getCurrentlyAuthenticatedUser();
-        Apprentice authenticatedApprentice = (Apprentice) authenticatedUser;
 
-        return authenticatedApprentice.getExemptionRequests();
+        if (authenticatedUser instanceof Apprentice authenticatedApprentice) {
+            return authenticatedApprentice.getExemptionRequests();
+        }
+
+        return Collections.emptyList();
     }
 
     public List<ExemptionRequest> loadRequestsOfTrainersDepartment() {
