@@ -265,6 +265,8 @@ paths:
 
 
   /exemption/{id}:
+    parameters:
+      - $ref: '#/components/parameters/exemptionRequestId'
     get:
       summary: Get an exemption request by ID
       tags:
@@ -315,7 +317,7 @@ components:
 
     exemptionRequestId:
       name: exemptionRequestId
-      description: The numeric id of the exemption request for whom the desired action should be performed
+      description: The numeric id of the exemption request
       in: path
       required: true
       schema:
@@ -372,6 +374,11 @@ components:
           format: date-time
           description: The end time of the exemption period.
           example: "2023-05-25T12:00:00"
+        submissionDate:
+          type: string
+          format: date-time
+          description: The timestamp of the submission.
+          example: "2023-05-20T015:00:00"
         reason:
           type: string
           description: The reason for the exemption request.
@@ -384,15 +391,13 @@ components:
             - "OTHER"
           example: "MEDICAL_APPOINTMENT"
         applicant:
-          $ref: '#/components/schemas/ApprenticeDto'
+          $ref: '#/components/schemas/PlainApprenticeDto'
         requestProcessing:
-          type: integer
-          nullable: true
-          description: The processing details of the request.
-          example: null
+          $ref: '#/components/schemas/RequestProcessingDto'
       required:
         - startTime
         - endTime
+        - submissionDate
         - reason
         - exemptionCategory
         - applicantId
@@ -452,10 +457,8 @@ components:
           example: "max.mustermann@example.com"
         department:
           $ref: '#/components/schemas/DepartmentDto'
-          description: The department of the apprentice.
         socioEduExpert:
           $ref: '#/components/schemas/SocioEduExpertDto'
-          description: The socio-educational expert associated with the apprentice.
       required:
         - id
         - firstName
@@ -463,6 +466,106 @@ components:
         - email
         - department
         - socioEduExpert
+
+    PlainApprenticeDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the apprentice.
+          example: 1
+        firstName:
+          type: string
+          description: The first name of the apprentice.
+          example: "Max"
+        lastName:
+          type: string
+          description: The last name of the apprentice.
+          example: "Mustermann"
+      required:
+        - id
+        - firstName
+        - lastName
+
+    TrainerDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the trainer.
+          example: 21
+        firstName:
+          type: string
+          description: The first name of the trainer.
+          example: "Herr"
+        lastName:
+          type: string
+          description: The last name of the trainer.
+          example: "Ausbilder"
+        email:
+          type: string
+          format: email
+          description: The email address of the apprentice.
+          example: "herr.ausbilder@example.com"
+        department:
+          $ref: '#/components/schemas/DepartmentDto'
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - department
+
+    PlainTrainerDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the trainer.
+          example: 21
+        firstName:
+          type: string
+          description: The first name of the trainer.
+          example: "Herr"
+        lastName:
+          type: string
+          description: The last name of the trainer.
+          example: "Ausbilder"
+      required:
+        - id
+        - firstName
+        - lastName
+
+
+    RequestProcessingDto:
+      type: object
+      properties:
+        processingStatus:
+          type: string
+          enum:
+            - "DRAFT"
+            - "SUBMITTED"
+            - "APPROVED"
+            - "REJECTED"
+            - "RECORDED_IN_SYSTEM"
+            - "CONFIRMATION_PRESENT"
+            -  "CONFIRMATION_MISSING"
+          example: "APPROVED"
+        comment:
+          type: string
+          description: The last name of the trainer.
+          example: null
+        processingDate:
+          type: string
+          format: date-time
+          description: The timestamp when the submission was processed.
+          example: "2023-05-24T16:00:00"
+        processor:
+          $ref: '#/components/schemas/PlainTrainerDto'
+      required:
+        - processingStatus
+        - processingDate
+        - processor
 
 
     SocioEduExpertDto:
