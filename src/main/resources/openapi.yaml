@@ -25,6 +25,8 @@ tags:
     description: Operations about managing the application authentication
   - name: User
     description: Operations about managing the application users
+  - name: ExemptionRequest
+    description: Operations about managing exemption requests
 
 
 
@@ -235,12 +237,87 @@ paths:
         409:
           description: User not found
 
+
+  /exemption:
+    post:
+      summary: Submit an exemption request
+      tags:
+        - ExemptionRequest
+      operationId: submitRequest
+      requestBody:
+        description: Exemption request submission details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExemptionRequestSubmissionDto'
+      responses:
+        '201':
+          description: Successful submission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExemptionRequestDto'
+        '400':
+          description: Bad Request
+        '500':
+          description: Error occurred during submission
+
+
+  /exemption/{id}:
+    parameters:
+      - $ref: '#/components/parameters/exemptionRequestId'
+    get:
+      summary: Get an exemption request by ID
+      tags:
+        - ExemptionRequest
+      operationId: getExemptionRequest
+      parameters:
+        - $ref: '#/components/parameters/exemptionRequestId'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExemptionRequestDto'
+        '400':
+          description: Invalid id parameter
+        '500':
+          description: Error occurred during query of exemption request
+  /exemption/self-submitted:
+    get:
+      summary: Get all self-submitted exemption requests
+      tags:
+        - ExemptionRequest
+      operationId: getAllSelfSubmittedRequests
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExemptionRequestDto'
+        default:
+          description: Error occurred while retrieving the requests
+
+
 components:
 
   parameters:
     userId:
       name: userId
       description: The numeric id of the user for whom the desired action should be performed
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Id'
+
+    exemptionRequestId:
+      name: exemptionRequestId
+      description: The numeric id of the exemption request
       in: path
       required: true
       schema:
@@ -279,6 +356,255 @@ components:
 
 
   schemas:
+
+    ExemptionRequestDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the exemption request.
+          example: 1
+        startTime:
+          type: string
+          format: date-time
+          description: The start time of the exemption period.
+          example: "2023-05-25T09:00:00"
+        endTime:
+          type: string
+          format: date-time
+          description: The end time of the exemption period.
+          example: "2023-05-25T12:00:00"
+        submissionDate:
+          type: string
+          format: date-time
+          description: The timestamp of the submission.
+          example: "2023-05-20T015:00:00"
+        reason:
+          type: string
+          description: The reason for the exemption request.
+          example: "Termin beim Orthopäden"
+        exemptionCategory:
+          type: "string"
+          enum:
+            - "MEDICAL_APPOINTMENT"
+            - "OFFICE_APPOINTMENT"
+            - "OTHER"
+          example: "MEDICAL_APPOINTMENT"
+        applicant:
+          $ref: '#/components/schemas/PlainApprenticeDto'
+        requestProcessing:
+          $ref: '#/components/schemas/RequestProcessingDto'
+      required:
+        - startTime
+        - endTime
+        - submissionDate
+        - reason
+        - exemptionCategory
+        - applicantId
+
+    ExemptionRequestSubmissionDto:
+      type: object
+      properties:
+        startTime:
+          type: string
+          format: date-time
+          description: The start time of the exemption period.
+          example: "2023-05-25T09:00:00"
+        endTime:
+          type: string
+          format: date-time
+          description: The end time of the exemption period.
+          example: "2023-05-25T12:00:00"
+        reason:
+          type: string
+          description: The reason for the exemption request.
+          example: "Termin beim Orthopäden"
+        exemptionCategory:
+          type: "string"
+          enum:
+            - "MEDICAL_APPOINTMENT"
+            - "OFFICE_APPOINTMENT"
+            - "OTHER"
+          example: "MEDICAL_APPOINTMENT"
+        applicantId:
+          type: integer
+      required:
+        - startTime
+        - endTime
+        - reason
+        - exemptionCategory
+        - applicantId
+
+    ApprenticeDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the apprentice.
+          example: 1
+        firstName:
+          type: string
+          description: The first name of the apprentice.
+          example: "Max"
+        lastName:
+          type: string
+          description: The last name of the apprentice.
+          example: "Mustermann"
+        email:
+          type: string
+          format: email
+          description: The email address of the apprentice.
+          example: "max.mustermann@example.com"
+        department:
+          $ref: '#/components/schemas/DepartmentDto'
+        socioEduExpert:
+          $ref: '#/components/schemas/SocioEduExpertDto'
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - department
+        - socioEduExpert
+
+    PlainApprenticeDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the apprentice.
+          example: 1
+        firstName:
+          type: string
+          description: The first name of the apprentice.
+          example: "Max"
+        lastName:
+          type: string
+          description: The last name of the apprentice.
+          example: "Mustermann"
+      required:
+        - id
+        - firstName
+        - lastName
+
+    TrainerDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the trainer.
+          example: 21
+        firstName:
+          type: string
+          description: The first name of the trainer.
+          example: "Herr"
+        lastName:
+          type: string
+          description: The last name of the trainer.
+          example: "Ausbilder"
+        email:
+          type: string
+          format: email
+          description: The email address of the apprentice.
+          example: "herr.ausbilder@example.com"
+        department:
+          $ref: '#/components/schemas/DepartmentDto'
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - department
+
+    PlainTrainerDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the trainer.
+          example: 21
+        firstName:
+          type: string
+          description: The first name of the trainer.
+          example: "Herr"
+        lastName:
+          type: string
+          description: The last name of the trainer.
+          example: "Ausbilder"
+      required:
+        - id
+        - firstName
+        - lastName
+
+
+    RequestProcessingDto:
+      type: object
+      properties:
+        processingStatus:
+          type: string
+          enum:
+            - "DRAFT"
+            - "SUBMITTED"
+            - "APPROVED"
+            - "REJECTED"
+            - "RECORDED_IN_SYSTEM"
+            - "CONFIRMATION_PRESENT"
+            -  "CONFIRMATION_MISSING"
+          example: "APPROVED"
+        comment:
+          type: string
+          description: The last name of the trainer.
+          example: null
+        processingDate:
+          type: string
+          format: date-time
+          description: The timestamp when the submission was processed.
+          example: "2023-05-24T16:00:00"
+        processor:
+          $ref: '#/components/schemas/PlainTrainerDto'
+      required:
+        - processingStatus
+        - processingDate
+        - processor
+
+
+    SocioEduExpertDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the SocialEduExpert.
+          example: 1
+        firstName:
+          type: string
+          description: The first name of the SocialEduExpert.
+          example: "Maria"
+        lastName:
+          type: string
+          description: The last name of the SocialEduExpertDto.
+          example: "Musterfrau"
+        email:
+          type: string
+          format: email
+          description: The email address of the SocialEduExpertDto.
+          example: "maria.musterfrau@example.com"
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+
+    DepartmentDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the department.
+          example: 1
+        name:
+          type: string
+          description: The name of the department.
+          example: "Informationstechnik"
 
     BaseUser:
       type: object

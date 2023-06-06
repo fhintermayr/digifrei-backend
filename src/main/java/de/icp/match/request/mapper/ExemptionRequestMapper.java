@@ -8,6 +8,8 @@ import de.icp.match.user.mapper.UserMapper;
 import de.icp.match.user.service.UserQueryService;
 import org.mapstruct.*;
 
+import java.util.List;
+
 @Mapper(
         unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING,
         uses = {UserMapper.class, RequestProcessingMapper.class, UserQueryService.class}
@@ -17,6 +19,8 @@ public interface ExemptionRequestMapper {
     ExemptionRequest toEntity(ExemptionRequestDto exemptionRequestDto);
 
     ExemptionRequestDto toDto(ExemptionRequest exemptionRequest);
+
+    List<ExemptionRequestDto> toDto(List<ExemptionRequest> exemptionRequest);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     ExemptionRequest partialUpdate(ExemptionRequestDto exemptionRequestDto, @MappingTarget ExemptionRequest exemptionRequest);
