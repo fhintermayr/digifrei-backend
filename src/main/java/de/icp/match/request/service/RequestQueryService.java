@@ -5,6 +5,7 @@ import de.icp.match.request.repository.ExemptionRequestRepository;
 import de.icp.match.security.service.CurrentUserService;
 import de.icp.match.user.model.Apprentice;
 import de.icp.match.user.model.User;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -19,6 +20,10 @@ public class RequestQueryService {
     public RequestQueryService(CurrentUserService currentUserService, ExemptionRequestRepository exemptionRequestRepository) {
         this.currentUserService = currentUserService;
         this.exemptionRequestRepository = exemptionRequestRepository;
+    }
+
+    public ExemptionRequest getRequestById(Long id) {
+        return exemptionRequestRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     public List<ExemptionRequest> loadSelfSubmittedRequests() throws ClassCastException {

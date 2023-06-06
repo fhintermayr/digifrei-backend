@@ -39,6 +39,15 @@ public class ExemptionRequestController {
                 .body(savedSubmissionDto);
     }
 
+    @GetMapping("exemption/{id}")
+    public ResponseEntity<ExemptionRequestDto> getExemptionRequestById(@PathVariable Long id) {
+
+        ExemptionRequest loadedRequest = requestQueryService.getRequestById(id);
+        ExemptionRequestDto loadedRequestDto = exemptionRequestMapper.toDto(loadedRequest);
+
+        return ResponseEntity.ok(loadedRequestDto);
+    }
+
     @GetMapping("exemption/self")
     public ResponseEntity<List<ExemptionRequestDto>> getAllSelfSubmittedRequests() {
 
