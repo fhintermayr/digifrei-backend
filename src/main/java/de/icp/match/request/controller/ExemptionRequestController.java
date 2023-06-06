@@ -2,9 +2,11 @@ package de.icp.match.request.controller;
 
 import de.icp.match.request.dto.ExemptionRequestDto;
 import de.icp.match.request.dto.ExemptionRequestSubmissionDto;
+import de.icp.match.request.dto.ExemptionRequestUpdateDto;
 import de.icp.match.request.mapper.ExemptionRequestMapper;
 import de.icp.match.request.model.ExemptionRequest;
 import de.icp.match.request.service.RequestQueryService;
+import de.icp.match.request.service.RequestUpdateService;
 import de.icp.match.request.service.SubmitRequestService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,11 +22,13 @@ public class ExemptionRequestController {
     private final ExemptionRequestMapper exemptionRequestMapper;
     private final SubmitRequestService submitRequestService;
     private final RequestQueryService requestQueryService;
+    private final RequestUpdateService requestUpdateService;
 
-    public ExemptionRequestController(ExemptionRequestMapper exemptionRequestMapper, SubmitRequestService submitRequestService, RequestQueryService requestQueryService) {
+    public ExemptionRequestController(ExemptionRequestMapper exemptionRequestMapper, SubmitRequestService submitRequestService, RequestQueryService requestQueryService, RequestUpdateService requestUpdateService) {
         this.exemptionRequestMapper = exemptionRequestMapper;
         this.submitRequestService = submitRequestService;
         this.requestQueryService = requestQueryService;
+        this.requestUpdateService = requestUpdateService;
     }
 
     @PostMapping("exemption")
@@ -64,6 +68,15 @@ public class ExemptionRequestController {
         List<ExemptionRequestDto> trainersDepartmentRequestsDto = exemptionRequestMapper.toDto(requestsOfAuthenticatedTrainersDepartment);
 
         return ResponseEntity.ok(trainersDepartmentRequestsDto);
+    }
+
+    @PutMapping("exemption/{id}")
+    public ResponseEntity<ExemptionRequestDto> updateExemptionRequestById(@RequestBody @Valid ExemptionRequestUpdateDto requestUpdateDto, @PathVariable Long id) {
+
+        ExemptionRequest updatedExemptionRequest = requestUpdateService.updateRequestById(id, requestUpdateDto);
+        ExemptionRequestDto updatedExemptionRequestDto = exemptionRequestMapper.toDto(updatedExemptionRequest);
+
+        return ResponseEntity.ok(updatedExemptionRequestDto);
     }
 
 }
