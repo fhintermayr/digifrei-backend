@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ExemptionRequestRepository extends JpaRepository<ExemptionRequest, Long> {
-    List<ExemptionRequest> findByApplicant_Department_Id(Long id);
+    List<ExemptionRequest> findByApplicantDepartmentId(Long id);
 }

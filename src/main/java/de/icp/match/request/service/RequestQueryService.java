@@ -35,6 +35,6 @@ public class RequestQueryService {
     public List<ExemptionRequest> loadRequestsOfTrainersDepartment() {
 
         Long authenticatedTrainersDepartmentId = currentUserService.getCurrentlyAuthenticatedUser().getDepartment().getId();
-        return exemptionRequestRepository.findByApplicant_Department_Id(authenticatedTrainersDepartmentId);
+        return exemptionRequestRepository.findByApplicantDepartmentId(authenticatedTrainersDepartmentId);
     }
 }
