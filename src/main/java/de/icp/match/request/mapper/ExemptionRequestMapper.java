@@ -3,6 +3,7 @@ package de.icp.match.request.mapper;
 import de.icp.match.request.dto.ExemptionRequestDto;
 import de.icp.match.request.dto.ExemptionRequestSubmissionDto;
 import de.icp.match.request.model.ExemptionRequest;
+import de.icp.match.request.dto.ExemptionRequestUpdateDto;
 import de.icp.match.request.model.RequestProcessing;
 import de.icp.match.user.mapper.UserMapper;
 import de.icp.match.user.service.UserQueryService;
@@ -22,9 +23,6 @@ public interface ExemptionRequestMapper {
 
     List<ExemptionRequestDto> toDto(List<ExemptionRequest> exemptionRequest);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    ExemptionRequest partialUpdate(ExemptionRequestDto exemptionRequestDto, @MappingTarget ExemptionRequest exemptionRequest);
-
     @AfterMapping
     default void linkRequestProcessing(@MappingTarget ExemptionRequest exemptionRequest) {
         RequestProcessing requestProcessing = exemptionRequest.getRequestProcessing();
@@ -35,4 +33,7 @@ public interface ExemptionRequestMapper {
 
     @Mapping(source = "applicantId", target = "applicant")
     ExemptionRequest toEntity(ExemptionRequestSubmissionDto exemptionRequestSubmissionDto);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    ExemptionRequest partialUpdate(ExemptionRequestUpdateDto exemptionRequestUpdateDto, @MappingTarget ExemptionRequest exemptionRequest);
 }
