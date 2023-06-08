@@ -17,6 +17,6 @@ public interface RequestProcessingMapper {
 
     RequestProcessing toEntity(RequestProcessingUpdateDto requestProcessingUpdateDto);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+//    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     RequestProcessing partialUpdate(RequestProcessingUpdateDto requestProcessingUpdateDto, @MappingTarget RequestProcessing requestProcessing);
 }
