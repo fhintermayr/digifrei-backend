@@ -41,6 +41,7 @@ public class RequestProcessing {
 
     public RequestProcessing(ExemptionRequest exemptionRequest, ProcessingStatus processingStatus, String comment, Trainer processor) {
         this.exemptionRequest = exemptionRequest;
+        this.exemptionRequest.setRequestProcessing(this);
         this.processingStatus = processingStatus;
         this.comment = comment;
         this.processor = processor;
