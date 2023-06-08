@@ -33,7 +33,7 @@ public class RequestProcessing {
 
     @PastOrPresent
     @Column(name = "processing_date", nullable = false)
-    private LocalDateTime processing_date = LocalDateTime.now();
+    private LocalDateTime processingDate = LocalDateTime.now();
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "processor_id", nullable = false)
