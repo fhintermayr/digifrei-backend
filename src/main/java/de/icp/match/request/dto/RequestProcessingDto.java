@@ -14,7 +14,7 @@ public record RequestProcessingDto(
         Long id,
         ProcessingStatus processingStatus,
         String comment,
-        @PastOrPresent LocalDateTime processing_date,
+        @PastOrPresent LocalDateTime processingDate,
         TrainerDto processor
 ) implements Serializable {
 }
