@@ -31,4 +31,13 @@ public class RequestProcessingController {
         return ResponseEntity.ok(processedExemptionRequestDto);
     }
 
+    @PutMapping("exemption/{id}/processing")
+    public ResponseEntity<ExemptionRequestDto> updateExemptionRequestProcessing(@PathVariable Long id, @RequestBody @Valid RequestProcessingUpdateDto processingUpdateDto) {
+
+        ExemptionRequest processedExemptionRequest = requestProcessingService.updateRequestProcessing(id, processingUpdateDto);
+        ExemptionRequestDto processedExemptionRequestDto = exemptionRequestMapper.toDto(processedExemptionRequest);
+
+        return ResponseEntity.ok(processedExemptionRequestDto);
+    }
+
 }
