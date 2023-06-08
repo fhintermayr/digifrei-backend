@@ -22,7 +22,7 @@ public class RequestProcessingController {
         this.exemptionRequestMapper = exemptionRequestMapper;
     }
 
-    @PostMapping("exemption/{id}/process")
+    @PostMapping("exemption/{id}/processing")
     public ResponseEntity<ExemptionRequestDto> processExemptionRequest(@PathVariable Long id, @RequestBody @Valid RequestProcessingUpdateDto processingUpdateDto) {
 
         ExemptionRequest processedExemptionRequest = requestProcessingService.processExemptionRequest(id, processingUpdateDto);
@@ -38,6 +38,14 @@ public class RequestProcessingController {
         ExemptionRequestDto processedExemptionRequestDto = exemptionRequestMapper.toDto(processedExemptionRequest);
 
         return ResponseEntity.ok(processedExemptionRequestDto);
+    }
+
+    @DeleteMapping("exemption/{id}/processing")
+    public ResponseEntity<Void> withdrawExemptionRequestProcessing(@PathVariable Long id) {
+
+        requestProcessingService.withdrawExemptionRequestProcessing(id);
+
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -70,4 +70,12 @@ public class RequestProcessingService {
         return exemptionRequestRepository.save(exemptionRequest);
     }
 
+    public void withdrawExemptionRequestProcessing(Long exemptionRequestId) {
+
+        ExemptionRequest exemptionRequest = requestQueryService.getRequestById(exemptionRequestId);
+        exemptionRequest.setRequestProcessing(null);
+
+        exemptionRequestRepository.save(exemptionRequest);
+    }
+
 }
