@@ -10,6 +10,7 @@ import de.icp.match.user.service.UserQueryService;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class EmailNotificationService {
         emailRecipients.forEach(emailRecipient -> sendSubmissionNotificationTo(emailRecipient, submission));
     }
 
+    @Scheduled(cron = "${mail.reminder.cron}", zone = "Europe/Berlin")
     public void sendDailyConfirmationReminders() {
 
         List<ExemptionRequest> requestsWithMissingConfirmation = requestQueryService.getRequestsWithMissingConfirmation();
