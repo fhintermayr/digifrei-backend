@@ -1,6 +1,7 @@
 package de.icp.match.request.service;
 
 import de.icp.match.request.model.ExemptionRequest;
+import de.icp.match.request.model.ProcessingStatus;
 import de.icp.match.request.util.GermanDateFormatter;
 import de.icp.match.user.model.Apprentice;
 import de.icp.match.user.model.EmailRecipient;
@@ -23,12 +24,14 @@ public class EmailNotificationService {
     private final JavaMailSender mailSender;
     private final RequestQueryService requestQueryService;
     private final String mailSenderAddress;
+    private final RequestUpdateService requestUpdateService;
 
-    public EmailNotificationService(UserQueryService userQueryService, JavaMailSender getJavaMailSender, Environment environment, RequestQueryService requestQueryService) {
+    public EmailNotificationService(UserQueryService userQueryService, JavaMailSender getJavaMailSender, Environment environment, RequestQueryService requestQueryService, RequestUpdateService requestUpdateService) {
         this.userQueryService = userQueryService;
         this.mailSender = getJavaMailSender;
         this.requestQueryService = requestQueryService;
         this.mailSenderAddress = environment.getProperty("spring.mail.properties.sender.address");
+        this.requestUpdateService = requestUpdateService;
     }
 
     public void notifyAboutSubmission(ExemptionRequest submission) {
@@ -43,16 +46,18 @@ public class EmailNotificationService {
 
         List<ExemptionRequest> requestsWithMissingConfirmation = requestQueryService.getRequestsWithMissingConfirmation();
 
-        requestsWithMissingConfirmation.forEach(this::notifyAboutMissingConfirmation);
+        requestsWithMissingConfirmation.forEach(this::notifyAboutMissingConfirmationAndUpdateProcessingStatus);
     }
 
-    private void notifyAboutMissingConfirmation(ExemptionRequest exemptionRequest) {
+    private void notifyAboutMissingConfirmationAndUpdateProcessingStatus(ExemptionRequest exemptionRequest) {
 
         Apprentice applicant = exemptionRequest.getApplicant();
         List<Trainer> trainersOfApplicant = userQueryService.getTrainersOfDepartment(applicant.getDepartment().getId());
 
         notifyApplicantAboutMissingConfirmation(exemptionRequest);
         trainersOfApplicant.forEach(trainer -> notifyTrainerAboutMissingConfirmation(trainer, exemptionRequest));
+
+        requestUpdateService.updateProcessingStatusById(exemptionRequest.getId(), ProcessingStatus.CONFIRMATION_MISSING);
     }
 
     private void notifyApplicantAboutMissingConfirmation(ExemptionRequest exemptionRequest) {
