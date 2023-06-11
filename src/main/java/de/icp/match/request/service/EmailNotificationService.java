@@ -7,6 +7,7 @@ import de.icp.match.user.model.EmailRecipient;
 import de.icp.match.user.model.SocioEduExpert;
 import de.icp.match.user.model.Trainer;
 import de.icp.match.user.service.UserQueryService;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,12 @@ public class EmailNotificationService {
 
     private final UserQueryService userQueryService;
     private final JavaMailSender mailSender;
+    private final String mailSenderAddress;
 
-    public EmailNotificationService(UserQueryService userQueryService, JavaMailSender getJavaMailSender) {
+    public EmailNotificationService(UserQueryService userQueryService, JavaMailSender getJavaMailSender, Environment environment) {
         this.userQueryService = userQueryService;
         this.mailSender = getJavaMailSender;
+        this.mailSenderAddress = environment.getProperty("spring.mail.properties.sender.address");
     }
 
     public void notifyAboutSubmission(ExemptionRequest submission) {
@@ -81,7 +84,7 @@ public class EmailNotificationService {
 
     private void sendSimpleMessage(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("xxx@xxx.com");
+        message.setFrom(mailSenderAddress);
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
