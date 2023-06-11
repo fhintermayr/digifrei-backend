@@ -67,7 +67,7 @@ public class EmailNotificationService {
                 submission.getStartTime(),
                 submission.getEndTime());
 
-        sendSimpleMessage(emailRecipient.getEmail(), subject, textTemplate);
+        sendSimpleMessage(emailRecipient.getEmail(), subject, emailText);
     }
 
     private void sendSimpleMessage(String to, String subject, String text) {
