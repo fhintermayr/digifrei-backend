@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-public class SocioEduExpert {
+public class SocioEduExpert implements EmailRecipient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

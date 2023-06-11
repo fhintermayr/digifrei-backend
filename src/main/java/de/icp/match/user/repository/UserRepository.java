@@ -20,4 +20,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findByFirstNameContainsOrLastNameContainsOrEmailContainsAllIgnoreCaseOrderByFirstNameDesc(String firstName, String lastName, String username);
 
+    List<User> findByDepartmentId(Long id);
+
 }

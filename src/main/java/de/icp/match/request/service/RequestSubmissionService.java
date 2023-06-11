@@ -10,14 +10,16 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class SubmitRequestService {
+public class RequestSubmissionService {
 
     private final ExemptionRequestRepository exemptionRequestRepository;
     private final UserQueryService userQueryService;
+    private final EmailNotificationService emailNotificationService;
 
-    public SubmitRequestService(ExemptionRequestRepository exemptionRequestRepository, UserQueryService userQueryService) {
+    public RequestSubmissionService(ExemptionRequestRepository exemptionRequestRepository, UserQueryService userQueryService, EmailNotificationService emailNotificationService) {
         this.exemptionRequestRepository = exemptionRequestRepository;
         this.userQueryService = userQueryService;
+        this.emailNotificationService = emailNotificationService;
     }
 
 
@@ -26,6 +28,8 @@ public class SubmitRequestService {
         validateSubmissionProperties(submission);
         ExemptionRequest savedSubmission = exemptionRequestRepository.save(submission);
         log.info("Created new exemption request#{}", savedSubmission.getId());
+
+        emailNotificationService.notifyAboutSubmission(savedSubmission);
 
         return savedSubmission;
     }
