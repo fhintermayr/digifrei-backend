@@ -1,6 +1,7 @@
 package de.icp.match.request.service;
 
 import de.icp.match.request.model.ExemptionRequest;
+import de.icp.match.request.util.GermanDateFormatter;
 import de.icp.match.user.model.Apprentice;
 import de.icp.match.user.model.EmailRecipient;
 import de.icp.match.user.model.SocioEduExpert;
@@ -49,11 +50,18 @@ public class EmailNotificationService {
 
         Apprentice applicant = submission.getApplicant();
 
-        String subject = String.format("Neue Dienstbefreiung von %s %s", applicant.getFirstName(), applicant.getLastName());
+        String formattedStartDate =  GermanDateFormatter.localDateTimeToGermanDateTime(submission.getStartTime());
+        String formattedEndDate =  GermanDateFormatter.localDateTimeToGermanDateTime(submission.getEndTime());
+
+        String subject = String.format("Neuer Dienstbefreiungsantrag von %s %s", applicant.getFirstName(), applicant.getLastName());
         String textTemplate = """
                 Hallo %s %s,
 
-                %s %s hat soeben einen Dienstbefreiungsantrag vom %s bis zum %s beantragt.
+                %s %s hat soeben eine Dienstbefreiung beantragt.
+                
+                Von: %s Uhr
+                Bis: %s Uhr
+                Begründung: %s
 
                 Mit freundlichen Grüßen
                 Die DigiFrei Plattform
@@ -64,8 +72,9 @@ public class EmailNotificationService {
                 emailRecipient.getLastName(),
                 applicant.getFirstName(),
                 applicant.getLastName(),
-                submission.getStartTime(),
-                submission.getEndTime());
+                formattedStartDate,
+                formattedEndDate,
+                submission.getReason());
 
         sendSimpleMessage(emailRecipient.getEmail(), subject, emailText);
     }
@@ -76,6 +85,7 @@ public class EmailNotificationService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
+
         mailSender.send(message);
     }
 
