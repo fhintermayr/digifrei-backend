@@ -8,7 +8,7 @@ import de.icp.match.request.model.ExemptionRequest;
 import de.icp.match.request.service.RequestDeletionService;
 import de.icp.match.request.service.RequestQueryService;
 import de.icp.match.request.service.RequestUpdateService;
-import de.icp.match.request.service.SubmitRequestService;
+import de.icp.match.request.service.RequestSubmissionService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +21,14 @@ import java.util.List;
 public class ExemptionRequestController {
 
     private final ExemptionRequestMapper exemptionRequestMapper;
-    private final SubmitRequestService submitRequestService;
+    private final RequestSubmissionService requestSubmissionService;
     private final RequestQueryService requestQueryService;
     private final RequestUpdateService requestUpdateService;
     private final RequestDeletionService requestDeletionService;
 
-    public ExemptionRequestController(ExemptionRequestMapper exemptionRequestMapper, SubmitRequestService submitRequestService, RequestQueryService requestQueryService, RequestUpdateService requestUpdateService, RequestDeletionService requestDeletionService) {
+    public ExemptionRequestController(ExemptionRequestMapper exemptionRequestMapper, RequestSubmissionService requestSubmissionService, RequestQueryService requestQueryService, RequestUpdateService requestUpdateService, RequestDeletionService requestDeletionService) {
         this.exemptionRequestMapper = exemptionRequestMapper;
-        this.submitRequestService = submitRequestService;
+        this.requestSubmissionService = requestSubmissionService;
         this.requestQueryService = requestQueryService;
         this.requestUpdateService = requestUpdateService;
         this.requestDeletionService = requestDeletionService;
@@ -38,7 +38,7 @@ public class ExemptionRequestController {
     public ResponseEntity<ExemptionRequestDto> submitRequest(@RequestBody @Valid ExemptionRequestSubmissionDto submittedRequestDto) {
 
         ExemptionRequest submittedRequest = exemptionRequestMapper.toEntity(submittedRequestDto);
-        ExemptionRequest savedSubmission = submitRequestService.saveSubmission(submittedRequest);
+        ExemptionRequest savedSubmission = requestSubmissionService.saveSubmission(submittedRequest);
         ExemptionRequestDto savedSubmissionDto = exemptionRequestMapper.toDto(savedSubmission);
 
         return ResponseEntity
