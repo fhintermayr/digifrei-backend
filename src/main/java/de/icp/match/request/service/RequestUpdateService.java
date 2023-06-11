@@ -3,6 +3,7 @@ package de.icp.match.request.service;
 import de.icp.match.request.dto.ExemptionRequestUpdateDto;
 import de.icp.match.request.mapper.ExemptionRequestMapperImpl;
 import de.icp.match.request.model.ExemptionRequest;
+import de.icp.match.request.model.ProcessingStatus;
 import de.icp.match.request.repository.ExemptionRequestRepository;
 import org.springframework.stereotype.Service;
 
@@ -31,4 +32,13 @@ public class RequestUpdateService {
 
         return exemptionRequestRepository.save(updatedExemptionRequest);
     }
+
+    public void updateProcessingStatusById(Long exemptionRequestId, ProcessingStatus newProcessingStatus) {
+
+        ExemptionRequest exemptionRequest = requestQueryService.getRequestById(exemptionRequestId);
+        exemptionRequest.getRequestProcessing().setProcessingStatus(newProcessingStatus);
+
+        exemptionRequestRepository.save(exemptionRequest);
+    }
+
 }
