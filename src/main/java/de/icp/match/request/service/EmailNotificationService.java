@@ -20,11 +20,13 @@ public class EmailNotificationService {
 
     private final UserQueryService userQueryService;
     private final JavaMailSender mailSender;
+    private final RequestQueryService requestQueryService;
     private final String mailSenderAddress;
 
-    public EmailNotificationService(UserQueryService userQueryService, JavaMailSender getJavaMailSender, Environment environment) {
+    public EmailNotificationService(UserQueryService userQueryService, JavaMailSender getJavaMailSender, Environment environment, RequestQueryService requestQueryService) {
         this.userQueryService = userQueryService;
         this.mailSender = getJavaMailSender;
+        this.requestQueryService = requestQueryService;
         this.mailSenderAddress = environment.getProperty("spring.mail.properties.sender.address");
     }
 
@@ -33,6 +35,92 @@ public class EmailNotificationService {
         List<EmailRecipient> emailRecipients = getEmailRecipientsOfSubmission(submission);
 
         emailRecipients.forEach(emailRecipient -> sendSubmissionNotificationTo(emailRecipient, submission));
+    }
+
+    public void sendDailyConfirmationReminders() {
+
+        List<ExemptionRequest> requestsWithMissingConfirmation = requestQueryService.getRequestsWithMissingConfirmation();
+
+        requestsWithMissingConfirmation.forEach(this::notifyAboutMissingConfirmation);
+    }
+
+    private void notifyAboutMissingConfirmation(ExemptionRequest exemptionRequest) {
+
+        Apprentice applicant = exemptionRequest.getApplicant();
+        List<Trainer> trainersOfApplicant = userQueryService.getTrainersOfDepartment(applicant.getDepartment().getId());
+
+        notifyApplicantAboutMissingConfirmation(exemptionRequest);
+        trainersOfApplicant.forEach(trainer -> notifyTrainerAboutMissingConfirmation(trainer, exemptionRequest));
+    }
+
+    private void notifyApplicantAboutMissingConfirmation(ExemptionRequest exemptionRequest) {
+
+        Apprentice applicant = exemptionRequest.getApplicant();
+
+        String subject = "Fehlende Abwesenheitsbestätigung für Dienstbefreiung";
+
+        String formattedStartDate =  GermanDateFormatter.localDateTimeToGermanDateTime(exemptionRequest.getStartTime());
+        String formattedEndDate =  GermanDateFormatter.localDateTimeToGermanDateTime(exemptionRequest.getEndTime());
+
+        String textTemplate = """
+                Hallo %s %s,
+
+                du wurdest in der Vergangenheit wegen folgender Dienstbefreiung freigestellt.
+                
+                Von: %s Uhr
+                Bis: %s Uhr
+                Begründung: %s
+                
+                Allerdings liegt bisher keine Abwesenheitsbestätigung vor. Bitte reiche diese zeitnah bei deinen Ausbilder nach.
+
+                Mit freundlichen Grüßen
+                Die DigiFrei Plattform
+                """;
+
+        String emailText = String.format(textTemplate,
+                applicant.getFirstName(),
+                applicant.getLastName(),
+                formattedStartDate,
+                formattedEndDate,
+                exemptionRequest.getReason());
+
+        sendSimpleMessage(applicant.getEmail(), subject, emailText);
+    }
+
+    private void notifyTrainerAboutMissingConfirmation(Trainer trainer, ExemptionRequest exemptionRequest) {
+
+        Apprentice applicant = exemptionRequest.getApplicant();
+
+        String subject = "Fehlende Abwesenheitsbestätigung für Dienstbefreiung";
+
+        String formattedStartDate =  GermanDateFormatter.localDateTimeToGermanDateTime(exemptionRequest.getStartTime());
+        String formattedEndDate =  GermanDateFormatter.localDateTimeToGermanDateTime(exemptionRequest.getEndTime());
+
+        String textTemplate = """
+                Hallo %s %s,
+
+                %s %s wurde in der Vergangenheit wegen folgender Dienstbefreiung freigestellt.
+                
+                Von: %s Uhr
+                Bis: %s Uhr
+                Begründung: %s
+                
+                Allerdings liegt bisher keine Abwesenheitsbestätigung vor. Bitte erinnere den/die Teilnehmer/in diese nachzureichen.
+
+                Mit freundlichen Grüßen
+                Die DigiFrei Plattform
+                """;
+
+        String emailText = String.format(textTemplate,
+                trainer.getFirstName(),
+                trainer.getLastName(),
+                applicant.getFirstName(),
+                applicant.getLastName(),
+                formattedStartDate,
+                formattedEndDate,
+                exemptionRequest.getReason());
+
+        sendSimpleMessage(trainer.getEmail(), subject, emailText);
     }
 
     private List<EmailRecipient> getEmailRecipientsOfSubmission(ExemptionRequest submission) {
