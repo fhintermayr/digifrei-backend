@@ -15,4 +15,5 @@ public interface ExemptionRequestRepository extends JpaRepository<ExemptionReque
     List<ExemptionRequest> findByRequestProcessingProcessingStatusAndEndTimeBefore(ProcessingStatus processingStatus, LocalDateTime endTime);
     List<ExemptionRequest> findByApplicantDepartmentId(Long id);
     Page<ExemptionRequest> findByApplicantDepartmentId(Long id, Pageable pageable);
+    Page<ExemptionRequest> findByApplicantIdOrderBySubmissionDateDesc(Integer id, Pageable pageable);
 }

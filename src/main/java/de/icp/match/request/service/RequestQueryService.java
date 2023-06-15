@@ -4,7 +4,6 @@ import de.icp.match.request.model.ExemptionRequest;
 import de.icp.match.request.model.ProcessingStatus;
 import de.icp.match.request.repository.ExemptionRequestRepository;
 import de.icp.match.security.service.CurrentUserService;
-import de.icp.match.user.model.Apprentice;
 import de.icp.match.user.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -33,15 +31,13 @@ public class RequestQueryService {
         return exemptionRequestRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    public List<ExemptionRequest> loadSelfSubmittedRequests() throws ClassCastException {
+    public Page<ExemptionRequest> loadSelfSubmittedRequests(int page, int size) {
 
         User authenticatedUser = currentUserService.getCurrentlyAuthenticatedUser();
 
-        if (authenticatedUser instanceof Apprentice authenticatedApprentice) {
-            return authenticatedApprentice.getExemptionRequests();
-        }
+        Pageable pageable = PageRequest.of(page, size);
 
-        return Collections.emptyList();
+        return exemptionRequestRepository.findByApplicantIdOrderBySubmissionDateDesc(authenticatedUser.getId(), pageable);
     }
 
     public Page<ExemptionRequest> loadRequestsOfTrainersDepartment(int page, int size) {

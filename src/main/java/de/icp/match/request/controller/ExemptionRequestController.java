@@ -15,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @CrossOrigin
 @RestController
 public class ExemptionRequestController {
@@ -57,10 +55,11 @@ public class ExemptionRequestController {
     }
 
     @GetMapping("exemption/self")
-    public ResponseEntity<List<ExemptionRequestDto>> getAllSelfSubmittedRequests() {
+    public ResponseEntity<Page<ExemptionRequestDto>> getAllSelfSubmittedRequests(@RequestParam(defaultValue = "0") Integer page,
+                                                                                 @RequestParam(defaultValue = "20") Integer size) {
 
-        List<ExemptionRequest> selfSubmittedRequests = requestQueryService.loadSelfSubmittedRequests();
-        List<ExemptionRequestDto> selfSubmittedRequestsDto = exemptionRequestMapper.toDto(selfSubmittedRequests);
+        Page<ExemptionRequest> selfSubmittedRequests = requestQueryService.loadSelfSubmittedRequests(page, size);
+        Page<ExemptionRequestDto> selfSubmittedRequestsDto = selfSubmittedRequests.map(exemptionRequestMapper::toDto);
 
         return ResponseEntity.ok(selfSubmittedRequestsDto);
     }
