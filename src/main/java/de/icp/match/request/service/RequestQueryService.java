@@ -7,6 +7,10 @@ import de.icp.match.security.service.CurrentUserService;
 import de.icp.match.user.model.Apprentice;
 import de.icp.match.user.model.User;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -40,10 +44,13 @@ public class RequestQueryService {
         return Collections.emptyList();
     }
 
-    public List<ExemptionRequest> loadRequestsOfTrainersDepartment() {
+    public Page<ExemptionRequest> loadRequestsOfTrainersDepartment(int page, int size) {
 
         Long authenticatedTrainersDepartmentId = currentUserService.getCurrentlyAuthenticatedUser().getDepartment().getId();
-        return exemptionRequestRepository.findByApplicantDepartmentId(authenticatedTrainersDepartmentId);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("submissionDate"));
+
+        return exemptionRequestRepository.findByApplicantDepartmentId(authenticatedTrainersDepartmentId, pageable);
     }
 
     public List<ExemptionRequest> getRequestsWithMissingConfirmation() {

@@ -10,6 +10,7 @@ import de.icp.match.request.service.RequestQueryService;
 import de.icp.match.request.service.RequestUpdateService;
 import de.icp.match.request.service.RequestSubmissionService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,10 +66,11 @@ public class ExemptionRequestController {
     }
 
     @GetMapping("exemption/own-department")
-    public ResponseEntity<List<ExemptionRequestDto>> getAllRequestOfTrainersDepartment() {
+    public ResponseEntity<Page<ExemptionRequestDto>> getAllRequestOfTrainersDepartment(@RequestParam(defaultValue = "0") Integer page,
+                                                                                       @RequestParam(defaultValue = "20") Integer size) {
 
-        List<ExemptionRequest> requestsOfAuthenticatedTrainersDepartment = requestQueryService.loadRequestsOfTrainersDepartment();
-        List<ExemptionRequestDto> trainersDepartmentRequestsDto = exemptionRequestMapper.toDto(requestsOfAuthenticatedTrainersDepartment);
+        Page<ExemptionRequest> requestsOfAuthenticatedTrainersDepartment = requestQueryService.loadRequestsOfTrainersDepartment(page, size);
+        Page<ExemptionRequestDto> trainersDepartmentRequestsDto = requestsOfAuthenticatedTrainersDepartment.map(exemptionRequestMapper::toDto);
 
         return ResponseEntity.ok(trainersDepartmentRequestsDto);
     }
