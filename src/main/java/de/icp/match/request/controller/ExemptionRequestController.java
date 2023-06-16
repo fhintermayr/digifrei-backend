@@ -56,7 +56,7 @@ public class ExemptionRequestController {
 
     @GetMapping("exemption/self")
     public ResponseEntity<Page<ExemptionRequestDto>> getAllSelfSubmittedRequests(@RequestParam(defaultValue = "0") Integer page,
-                                                                                 @RequestParam(defaultValue = "20") Integer size) {
+                                                                                 @RequestParam(defaultValue = "10") Integer size) {
 
         Page<ExemptionRequest> selfSubmittedRequests = requestQueryService.loadSelfSubmittedRequests(page, size);
         Page<ExemptionRequestDto> selfSubmittedRequestsDto = selfSubmittedRequests.map(exemptionRequestMapper::toDto);
@@ -66,7 +66,7 @@ public class ExemptionRequestController {
 
     @GetMapping("exemption/own-department")
     public ResponseEntity<Page<ExemptionRequestDto>> getAllRequestOfTrainersDepartment(@RequestParam(defaultValue = "0") Integer page,
-                                                                                       @RequestParam(defaultValue = "20") Integer size) {
+                                                                                       @RequestParam(defaultValue = "10") Integer size) {
 
         Page<ExemptionRequest> requestsOfAuthenticatedTrainersDepartment = requestQueryService.loadRequestsOfTrainersDepartment(page, size);
         Page<ExemptionRequestDto> trainersDepartmentRequestsDto = requestsOfAuthenticatedTrainersDepartment.map(exemptionRequestMapper::toDto);
