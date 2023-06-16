@@ -10,11 +10,10 @@ import de.icp.match.request.service.RequestQueryService;
 import de.icp.match.request.service.RequestUpdateService;
 import de.icp.match.request.service.RequestSubmissionService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -56,19 +55,21 @@ public class ExemptionRequestController {
     }
 
     @GetMapping("exemption/self")
-    public ResponseEntity<List<ExemptionRequestDto>> getAllSelfSubmittedRequests() {
+    public ResponseEntity<Page<ExemptionRequestDto>> getAllSelfSubmittedRequests(@RequestParam(defaultValue = "0") Integer page,
+                                                                                 @RequestParam(defaultValue = "10") Integer size) {
 
-        List<ExemptionRequest> selfSubmittedRequests = requestQueryService.loadSelfSubmittedRequests();
-        List<ExemptionRequestDto> selfSubmittedRequestsDto = exemptionRequestMapper.toDto(selfSubmittedRequests);
+        Page<ExemptionRequest> selfSubmittedRequests = requestQueryService.loadSelfSubmittedRequests(page, size);
+        Page<ExemptionRequestDto> selfSubmittedRequestsDto = selfSubmittedRequests.map(exemptionRequestMapper::toDto);
 
         return ResponseEntity.ok(selfSubmittedRequestsDto);
     }
 
     @GetMapping("exemption/own-department")
-    public ResponseEntity<List<ExemptionRequestDto>> getAllRequestOfTrainersDepartment() {
+    public ResponseEntity<Page<ExemptionRequestDto>> getAllRequestOfTrainersDepartment(@RequestParam(defaultValue = "0") Integer page,
+                                                                                       @RequestParam(defaultValue = "10") Integer size) {
 
-        List<ExemptionRequest> requestsOfAuthenticatedTrainersDepartment = requestQueryService.loadRequestsOfTrainersDepartment();
-        List<ExemptionRequestDto> trainersDepartmentRequestsDto = exemptionRequestMapper.toDto(requestsOfAuthenticatedTrainersDepartment);
+        Page<ExemptionRequest> requestsOfAuthenticatedTrainersDepartment = requestQueryService.loadRequestsOfTrainersDepartment(page, size);
+        Page<ExemptionRequestDto> trainersDepartmentRequestsDto = requestsOfAuthenticatedTrainersDepartment.map(exemptionRequestMapper::toDto);
 
         return ResponseEntity.ok(trainersDepartmentRequestsDto);
     }

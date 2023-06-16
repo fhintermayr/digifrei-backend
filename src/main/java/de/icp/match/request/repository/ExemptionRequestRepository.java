@@ -2,6 +2,8 @@ package de.icp.match.request.repository;
 
 import de.icp.match.request.model.ExemptionRequest;
 import de.icp.match.request.model.ProcessingStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +14,6 @@ import java.util.List;
 public interface ExemptionRequestRepository extends JpaRepository<ExemptionRequest, Long> {
     List<ExemptionRequest> findByRequestProcessingProcessingStatusAndEndTimeBefore(ProcessingStatus processingStatus, LocalDateTime endTime);
     List<ExemptionRequest> findByApplicantDepartmentId(Long id);
+    Page<ExemptionRequest> findByApplicantDepartmentId(Long id, Pageable pageable);
+    Page<ExemptionRequest> findByApplicantIdOrderBySubmissionDateDesc(Integer id, Pageable pageable);
 }
