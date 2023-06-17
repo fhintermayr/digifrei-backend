@@ -2,7 +2,6 @@ package de.icp.match.request.model;
 
 import de.icp.match.user.model.Apprentice;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,11 +19,9 @@ public class ExemptionRequest {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @FutureOrPresent
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
-    @FutureOrPresent
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
 
