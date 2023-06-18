@@ -11,7 +11,6 @@ import java.util.List;
 @Service
 public class DepartmentService {
 
-
     private final DepartmentRepository departmentRepository;
 
     public DepartmentService(DepartmentRepository departmentRepository) {
@@ -26,7 +25,7 @@ public class DepartmentService {
             return departmentRepository.save(departmentToCreate);
         }
         catch (Exception e) {
-            throw new DepartmentCreationException("Fehler bei der Erstellung der Abteilung", e);
+            throw new DepartmentCreationException("Fehler beim Speichern der Abteilung in der Datenbank", e);
         }
     }
 
