@@ -1,5 +1,6 @@
 package de.icp.match.user.service;
 
+import de.icp.match.user.exception.DepartmentCreationException;
 import de.icp.match.user.model.Department;
 import de.icp.match.user.repository.DepartmentRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,11 +11,22 @@ import java.util.List;
 @Service
 public class DepartmentService {
 
-
     private final DepartmentRepository departmentRepository;
 
     public DepartmentService(DepartmentRepository departmentRepository) {
         this.departmentRepository = departmentRepository;
+    }
+
+    public Department createDepartment(String departmentName) {
+
+        Department departmentToCreate = new Department(departmentName);
+
+        try {
+            return departmentRepository.save(departmentToCreate);
+        }
+        catch (Exception e) {
+            throw new DepartmentCreationException("Fehler beim Speichern der Abteilung in der Datenbank", e);
+        }
     }
 
     public Department findById(Long departmentId) {
