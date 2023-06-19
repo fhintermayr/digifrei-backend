@@ -10,9 +10,9 @@ import java.util.List;
 public interface SocioEduExpertRepository extends JpaRepository<SocioEduExpert, Long> {
 
     default List<SocioEduExpert> findAllContainingSearchTerm(String searchTerm) {
-        return findTop10ByFirstNameOrLastNameOrEmailAllIgnoreCaseOrderByFirstNameDesc(searchTerm, searchTerm, searchTerm);
+        return findTop10ByFirstNameContainsOrLastNameContainsOrEmailContainsAllIgnoreCaseOrderByFirstNameDesc(searchTerm, searchTerm, searchTerm);
     }
 
-    List<SocioEduExpert> findTop10ByFirstNameOrLastNameOrEmailAllIgnoreCaseOrderByFirstNameDesc(String firstName, String lastName, String email);
+    List<SocioEduExpert> findTop10ByFirstNameContainsOrLastNameContainsOrEmailContainsAllIgnoreCaseOrderByFirstNameDesc(String firstName, String lastName, String email);
 
 }
