@@ -7,6 +7,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SocioEduExpertService {
 
@@ -30,5 +32,16 @@ public class SocioEduExpertService {
 
     public SocioEduExpert findById(Long id) {
         return socioEduExpertRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    public List<SocioEduExpert> findAllContainingSearchTerm(String searchTerm) {
+
+        if (searchTerm != null) return socioEduExpertRepository.findAllContainingSearchTerm(searchTerm);
+
+        return socioEduExpertRepository
+                .findAll()
+                .stream()
+                .limit(10)
+                .toList();
     }
 }
