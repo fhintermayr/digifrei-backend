@@ -33,6 +33,14 @@ public class DepartmentService {
         return departmentRepository.findById(departmentId).orElseThrow(EntityNotFoundException::new);
     }
 
+    public Department changeName(Long departmentId, String newDepartmentName) {
+
+        Department department = findById(departmentId);
+        department.setName(newDepartmentName);
+
+        return departmentRepository.save(department);
+    }
+
     public List<Department> loadAllDepartments() {
         return departmentRepository.findAll();
     }

@@ -35,4 +35,13 @@ public class DepartmentController {
 
         return ResponseEntity.ok(allDepartments);
     }
+
+    @PutMapping("department/{id}")
+    public ResponseEntity<Department> updateDepartment(@PathVariable Long id, @RequestBody @Valid DepartmentCreateDto departmentCreateDto) {
+
+        String newDepartmentName = departmentCreateDto.name();
+        Department updatedDepartment = departmentService.changeName(id, newDepartmentName);
+
+        return ResponseEntity.ok(updatedDepartment);
+    }
 }
