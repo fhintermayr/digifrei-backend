@@ -1,6 +1,8 @@
 package de.icp.match.user.service;
 
+import de.icp.match.user.dto.socio_edu_expert.SocioEduExpertCreationDto;
 import de.icp.match.user.exception.DuplicateEmailException;
+import de.icp.match.user.mapper.SocioEduExpertMapper;
 import de.icp.match.user.model.SocioEduExpert;
 import de.icp.match.user.repository.SocioEduExpertRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,9 +15,12 @@ import java.util.List;
 public class SocioEduExpertService {
 
     private final SocioEduExpertRepository socioEduExpertRepository;
+    private final SocioEduExpertMapper socioEduExpertMapper;
 
-    public SocioEduExpertService(SocioEduExpertRepository socioEduExpertRepository) {
+    public SocioEduExpertService(SocioEduExpertRepository socioEduExpertRepository,
+                                 SocioEduExpertMapper socioEduExpertMapper) {
         this.socioEduExpertRepository = socioEduExpertRepository;
+        this.socioEduExpertMapper = socioEduExpertMapper;
     }
 
     public SocioEduExpert registerSocioEduExpert(SocioEduExpert socioEduExpert) {
@@ -44,4 +49,13 @@ public class SocioEduExpertService {
                 .limit(10)
                 .toList();
     }
+
+    public SocioEduExpert updateSocioEduExpert(Long id, SocioEduExpertCreationDto updateDto) {
+
+        SocioEduExpert expertToEdit = findById(id);
+        SocioEduExpert updatedExpert = socioEduExpertMapper.partialUpdate(updateDto, expertToEdit);
+
+        return socioEduExpertRepository.save(updatedExpert);
+    }
+
 }
