@@ -1,6 +1,9 @@
-package de.icp.match.user.exception;
+package de.icp.match.user.exception.handler;
 
 import de.icp.match.user.controller.DepartmentController;
+import de.icp.match.user.exception.DepartmentCreationException;
+import de.icp.match.user.exception.ExceptionResponse;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +19,13 @@ public class DepartmentExceptionHandler {
     public ExceptionResponse handleDepartmentCreationException(DepartmentCreationException e) {
         log.error(e.getMessage(), e);
         return new ExceptionResponse(HttpStatus.CONFLICT.value(), e.getMessage());
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse handleEntityNotFoundException(EntityNotFoundException e) {
+        log.error(e.getMessage(), e);
+        return new ExceptionResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
