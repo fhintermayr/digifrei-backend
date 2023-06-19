@@ -40,4 +40,12 @@ public class SocioEduExpertController {
 
         return ResponseEntity.ok(foundSocioEduExperts);
     }
+
+    @PutMapping("socio-edu-expert/{id}")
+    public ResponseEntity<SocioEduExpert> updateSocioEduExpert(@PathVariable Long id, @RequestBody SocioEduExpertCreationDto updateDto) {
+
+        SocioEduExpert updatedSocioEduExpert = socioEduExpertService.updateSocioEduExpert(id, updateDto);
+
+        return ResponseEntity.ok(updatedSocioEduExpert);
+    }
 }
