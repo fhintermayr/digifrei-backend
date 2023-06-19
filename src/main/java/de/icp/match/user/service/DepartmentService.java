@@ -30,7 +30,10 @@ public class DepartmentService {
     }
 
     public Department findById(Long departmentId) {
-        return departmentRepository.findById(departmentId).orElseThrow(EntityNotFoundException::new);
+
+        String entityNotFoundErrorMessage = String.format("Die Abteilung mit der Id %d existiert nicht", departmentId);
+
+        return departmentRepository.findById(departmentId).orElseThrow(() -> new EntityNotFoundException(entityNotFoundErrorMessage));
     }
 
     public Department changeName(Long departmentId, String newDepartmentName) {
