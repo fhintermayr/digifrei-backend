@@ -1,6 +1,7 @@
 package de.icp.match.request.service;
 
 import de.icp.match.request.model.ExemptionRequest;
+import de.icp.match.request.model.ProcessingStatus;
 import de.icp.match.request.util.GermanDateFormatter;
 import de.icp.match.user.model.Apprentice;
 import de.icp.match.user.model.EmailRecipient;
@@ -10,6 +11,7 @@ import de.icp.match.user.service.UserQueryService;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,12 +22,16 @@ public class EmailNotificationService {
 
     private final UserQueryService userQueryService;
     private final JavaMailSender mailSender;
+    private final RequestQueryService requestQueryService;
     private final String mailSenderAddress;
+    private final RequestUpdateService requestUpdateService;
 
-    public EmailNotificationService(UserQueryService userQueryService, JavaMailSender getJavaMailSender, Environment environment) {
+    public EmailNotificationService(UserQueryService userQueryService, JavaMailSender getJavaMailSender, Environment environment, RequestQueryService requestQueryService, RequestUpdateService requestUpdateService) {
         this.userQueryService = userQueryService;
         this.mailSender = getJavaMailSender;
+        this.requestQueryService = requestQueryService;
         this.mailSenderAddress = environment.getProperty("spring.mail.properties.sender.address");
+        this.requestUpdateService = requestUpdateService;
     }
 
     public void notifyAboutSubmission(ExemptionRequest submission) {
@@ -33,6 +39,95 @@ public class EmailNotificationService {
         List<EmailRecipient> emailRecipients = getEmailRecipientsOfSubmission(submission);
 
         emailRecipients.forEach(emailRecipient -> sendSubmissionNotificationTo(emailRecipient, submission));
+    }
+
+    @Scheduled(cron = "${mail.reminder.cron}", zone = "Europe/Berlin")
+    public void sendDailyConfirmationReminders() {
+
+        List<ExemptionRequest> requestsWithMissingConfirmation = requestQueryService.getRequestsWithMissingConfirmation();
+
+        requestsWithMissingConfirmation.forEach(this::notifyAboutMissingConfirmationAndUpdateProcessingStatus);
+    }
+
+    private void notifyAboutMissingConfirmationAndUpdateProcessingStatus(ExemptionRequest exemptionRequest) {
+
+        Apprentice applicant = exemptionRequest.getApplicant();
+        List<Trainer> trainersOfApplicant = userQueryService.getTrainersOfDepartment(applicant.getDepartment().getId());
+
+        notifyApplicantAboutMissingConfirmation(exemptionRequest);
+        trainersOfApplicant.forEach(trainer -> notifyTrainerAboutMissingConfirmation(trainer, exemptionRequest));
+
+        requestUpdateService.updateProcessingStatusById(exemptionRequest.getId(), ProcessingStatus.CONFIRMATION_MISSING);
+    }
+
+    private void notifyApplicantAboutMissingConfirmation(ExemptionRequest exemptionRequest) {
+
+        Apprentice applicant = exemptionRequest.getApplicant();
+
+        String subject = "Fehlende Abwesenheitsbestätigung für Dienstbefreiung";
+
+        String formattedStartDate =  GermanDateFormatter.localDateTimeToGermanDateTime(exemptionRequest.getStartTime());
+        String formattedEndDate =  GermanDateFormatter.localDateTimeToGermanDateTime(exemptionRequest.getEndTime());
+
+        String textTemplate = """
+                Hallo %s %s,
+
+                du wurdest in der Vergangenheit wegen folgender Dienstbefreiung freigestellt.
+                
+                Von: %s Uhr
+                Bis: %s Uhr
+                Begründung: %s
+                
+                Allerdings liegt bisher keine Abwesenheitsbestätigung vor. Bitte reiche diese zeitnah bei deinen Ausbilder nach.
+
+                Mit freundlichen Grüßen
+                Die DigiFrei Plattform
+                """;
+
+        String emailText = String.format(textTemplate,
+                applicant.getFirstName(),
+                applicant.getLastName(),
+                formattedStartDate,
+                formattedEndDate,
+                exemptionRequest.getReason());
+
+        sendSimpleMessage(applicant.getEmail(), subject, emailText);
+    }
+
+    private void notifyTrainerAboutMissingConfirmation(Trainer trainer, ExemptionRequest exemptionRequest) {
+
+        Apprentice applicant = exemptionRequest.getApplicant();
+
+        String subject = "Fehlende Abwesenheitsbestätigung für Dienstbefreiung";
+
+        String formattedStartDate =  GermanDateFormatter.localDateTimeToGermanDateTime(exemptionRequest.getStartTime());
+        String formattedEndDate =  GermanDateFormatter.localDateTimeToGermanDateTime(exemptionRequest.getEndTime());
+
+        String textTemplate = """
+                Hallo %s %s,
+
+                %s %s wurde in der Vergangenheit wegen folgender Dienstbefreiung freigestellt.
+                
+                Von: %s Uhr
+                Bis: %s Uhr
+                Begründung: %s
+                
+                Allerdings liegt bisher keine Abwesenheitsbestätigung vor. Bitte erinnere den/die Teilnehmer/in diese nachzureichen.
+
+                Mit freundlichen Grüßen
+                Die DigiFrei Plattform
+                """;
+
+        String emailText = String.format(textTemplate,
+                trainer.getFirstName(),
+                trainer.getLastName(),
+                applicant.getFirstName(),
+                applicant.getLastName(),
+                formattedStartDate,
+                formattedEndDate,
+                exemptionRequest.getReason());
+
+        sendSimpleMessage(trainer.getEmail(), subject, emailText);
     }
 
     private List<EmailRecipient> getEmailRecipientsOfSubmission(ExemptionRequest submission) {

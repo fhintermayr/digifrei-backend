@@ -20,7 +20,7 @@ public class UserCreationService {
 
     public User register(User userToRegister) {
 
-       if (isEmailTaken(userToRegister.getPassword())) {
+       if (isEmailTaken(userToRegister.getEmail())) {
            throw new IllegalArgumentException("User with email " + userToRegister.getEmail() + " already exists");
        }
 
