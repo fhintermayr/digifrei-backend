@@ -14,13 +14,16 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
-@RestController
 @CrossOrigin
+@RestController
+@PreAuthorize("hasAuthority('TRAINER')")
+@RequestMapping("user")
 public class UserController {
 
     private final UserMapper userMapper;
@@ -40,12 +43,12 @@ public class UserController {
     }
 
     /**
-     * POST /user/register : Creates and registers a new user in the application
+     * POST /user : Creates and registers a new user in the application
      *
      * @param userCreationDto Object containing all information about the user who should be saved in the application (required)
      * @return The newly created user based on the information provided in the request body (status code 201)
      */
-    @PostMapping("user/register")
+    @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody UserCreateDto userCreationDto) {
 
         try {
@@ -63,7 +66,7 @@ public class UserController {
 
     @RequestMapping(
             method = RequestMethod.HEAD,
-            value = "user/{username}"
+            value = "{username}"
     )
     public ResponseEntity<Void> checkIfUsernameIsTaken(@PathVariable String username) {
         return userQueryService.isEmailTaken(username) ?
@@ -71,7 +74,7 @@ public class UserController {
                 ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
-    @GetMapping("user")
+    @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsersContainingSearchTerm(
             @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) Integer limit) {
@@ -88,7 +91,7 @@ public class UserController {
      * @param userId The numeric id of the user for whom the desired action should be performed (required)
      * @return All information about the user whose id was specified in the path parameter (status code 200)
      */
-    @GetMapping("user/{userId}")
+    @GetMapping("{userId}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Integer userId) {
 
         try {
@@ -108,7 +111,7 @@ public class UserController {
      * @param userUpdateDto The user object containing all the new data that should be replaced. You have to pass the old value of a property if it should not be replaced  (required)
      * @return The updated user containing the new data provided in the request body (status code 200)
      */
-    @PutMapping("user/{userId}")
+    @PutMapping("{userId}")
     public ResponseEntity<UserDto> updateUserById(@PathVariable Integer userId, @RequestBody UserUpdateDto userUpdateDto) {
 
         try {
@@ -123,7 +126,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("user/{userId}/password")
+    @PutMapping("{userId}/password")
     public ResponseEntity<Void> changeUserPassword(@PathVariable Integer userId, @RequestBody ChangeUserPasswordRequestDto changeUserPasswordRequestDto) {
 
         try {
@@ -147,7 +150,7 @@ public class UserController {
      * @param userId The numeric id of the user for whom the desired action should be performed (required)
      * @return Specifies that deleting the user was performed successfully (status code 200)
      */
-    @DeleteMapping("user/{userId}")
+    @DeleteMapping("{userId}")
     public ResponseEntity<Void> deleteUserById(@PathVariable Integer userId) {
 
         try {

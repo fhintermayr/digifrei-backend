@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public interface ExemptionRequestRepository extends JpaRepository<ExemptionRequest, Long> {
     List<ExemptionRequest> findByRequestProcessingProcessingStatusAndEndTimeBefore(ProcessingStatus processingStatus, LocalDateTime endTime);
-    List<ExemptionRequest> findByApplicantDepartmentId(Long id);
-    Page<ExemptionRequest> findByApplicantDepartmentId(Long id, Pageable pageable);
+    Page<ExemptionRequest> findByApplicantDepartmentIdOrderBySubmissionDateDesc(Long id, Pageable pageable);
     Page<ExemptionRequest> findByApplicantIdOrderBySubmissionDateDesc(Integer id, Pageable pageable);
 }

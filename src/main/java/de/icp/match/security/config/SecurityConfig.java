@@ -2,7 +2,6 @@ package de.icp.match.security.config;
 
 import de.icp.match.security.exception.handler.CustomAccessDeniedHandler;
 import de.icp.match.security.filter.JwtAuthenticationFilter;
-import de.icp.match.security.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -10,9 +9,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,13 +23,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
-    // FIXME: Why dont change to bean retuning the UserDetailsService interface?
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl, JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(UserDetailsService userDetailsServiceImpl, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsService = userDetailsServiceImpl;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
@@ -43,11 +44,7 @@ public class SecurityConfig {
                 .csrf().disable()
 
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**").permitAll()
-                // Role hierarchies don't work as expected in spring security 6, so I had to add every role separately
-//                .requestMatchers(HttpMethod.GET, "/user/{userId}").hasAnyAuthority("MEMBER", "ADMINISTRATOR")
-//                .requestMatchers(HttpMethod.GET, "/user").hasAnyAuthority("MEMBER", "ADMINISTRATOR", "APPRENTICE")
-//                .requestMatchers("/user/**").hasAuthority("ADMINISTRATOR")
+                .requestMatchers("auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
 
