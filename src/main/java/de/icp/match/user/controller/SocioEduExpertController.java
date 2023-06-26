@@ -13,6 +13,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
+@RequestMapping("socio-edu-expert")
 public class SocioEduExpertController {
 
     private final SocioEduExpertService socioEduExpertService;
@@ -24,7 +25,7 @@ public class SocioEduExpertController {
         this.socioEduExpertMapper = socioEduExpertMapper;
     }
 
-    @PostMapping("socio-edu-expert")
+    @PostMapping
     public ResponseEntity<SocioEduExpert> registerSocioEduExpert(@RequestBody @Valid SocioEduExpertCreationDto creationDto) {
 
         SocioEduExpert socioEduExpert = socioEduExpertMapper.toEntity(creationDto);
@@ -33,7 +34,7 @@ public class SocioEduExpertController {
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredSocioEduExpert);
     }
 
-    @GetMapping("socio-edu-expert")
+    @GetMapping
     public ResponseEntity<List<SocioEduExpert>> getAllSocioEduExpertsContainingSearchTerm(@RequestParam(required = false) String searchTerm) {
 
         List<SocioEduExpert> foundSocioEduExperts = socioEduExpertService.findAllContainingSearchTerm(searchTerm);
@@ -41,7 +42,7 @@ public class SocioEduExpertController {
         return ResponseEntity.ok(foundSocioEduExperts);
     }
 
-    @GetMapping("socio-edu-expert/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<SocioEduExpert> getSocioEduExpert(@PathVariable Long id) {
 
         SocioEduExpert foundSocioEduExpert = socioEduExpertService.findById(id);
@@ -49,7 +50,7 @@ public class SocioEduExpertController {
         return ResponseEntity.ok(foundSocioEduExpert);
     }
 
-    @PutMapping("socio-edu-expert/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<SocioEduExpert> updateSocioEduExpert(@PathVariable Long id, @RequestBody SocioEduExpertCreationDto updateDto) {
 
         SocioEduExpert updatedSocioEduExpert = socioEduExpertService.updateSocioEduExpert(id, updateDto);

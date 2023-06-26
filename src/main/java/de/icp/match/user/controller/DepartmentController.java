@@ -12,6 +12,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
+@RequestMapping("department")
 public class DepartmentController {
 
     private final DepartmentService departmentService;
@@ -20,7 +21,7 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-    @PostMapping("department")
+    @PostMapping
     public ResponseEntity<Department> createDepartment(@RequestBody @Valid DepartmentCreateDto departmentCreateDto) {
 
         Department createdDepartment = departmentService.createDepartment(departmentCreateDto.name());
@@ -28,7 +29,7 @@ public class DepartmentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDepartment);
     }
 
-    @GetMapping("department")
+    @GetMapping
     public ResponseEntity<List<Department>> getAllDepartments() {
 
         List<Department> allDepartments = departmentService.loadAllDepartments();
@@ -36,7 +37,7 @@ public class DepartmentController {
         return ResponseEntity.ok(allDepartments);
     }
 
-    @PutMapping("department/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<Department> updateDepartment(@PathVariable Long id, @RequestBody @Valid DepartmentCreateDto departmentCreateDto) {
 
         String newDepartmentName = departmentCreateDto.name();

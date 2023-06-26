@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
+@RequestMapping("exemption/{id}/processing")
 public class RequestProcessingController {
 
     private final RequestProcessingService requestProcessingService;
@@ -22,7 +23,7 @@ public class RequestProcessingController {
         this.exemptionRequestMapper = exemptionRequestMapper;
     }
 
-    @PostMapping("exemption/{id}/processing")
+    @PostMapping
     public ResponseEntity<ExemptionRequestDto> processExemptionRequest(@PathVariable Long id, @RequestBody @Valid RequestProcessingUpdateDto processingUpdateDto) {
 
         ExemptionRequest processedExemptionRequest = requestProcessingService.processExemptionRequest(id, processingUpdateDto);
@@ -31,7 +32,7 @@ public class RequestProcessingController {
         return ResponseEntity.ok(processedExemptionRequestDto);
     }
 
-    @PutMapping("exemption/{id}/processing")
+    @PutMapping
     public ResponseEntity<ExemptionRequestDto> updateExemptionRequestProcessing(@PathVariable Long id, @RequestBody @Valid RequestProcessingUpdateDto processingUpdateDto) {
 
         ExemptionRequest processedExemptionRequest = requestProcessingService.updateRequestProcessing(id, processingUpdateDto);
@@ -40,7 +41,7 @@ public class RequestProcessingController {
         return ResponseEntity.ok(processedExemptionRequestDto);
     }
 
-    @DeleteMapping("exemption/{id}/processing")
+    @DeleteMapping
     public ResponseEntity<Void> withdrawExemptionRequestProcessing(@PathVariable Long id) {
 
         requestProcessingService.withdrawExemptionRequestProcessing(id);
