@@ -7,10 +7,12 @@ import de.icp.match.request.model.ExemptionRequest;
 import de.icp.match.request.service.RequestProcessingService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
+@PreAuthorize("hasAuthority('TRAINER')")
 @RequestMapping("exemption/{id}/processing")
 public class RequestProcessingController {
 

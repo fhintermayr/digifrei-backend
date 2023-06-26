@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -35,6 +36,7 @@ public class ExemptionRequestController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('APPRENTICE')")
     public ResponseEntity<ExemptionRequestDto> submitRequest(@RequestBody @Valid ExemptionRequestSubmissionDto submittedRequestDto) {
 
         ExemptionRequest submittedRequest = exemptionRequestMapper.toEntity(submittedRequestDto);
@@ -56,6 +58,7 @@ public class ExemptionRequestController {
     }
 
     @GetMapping("self-submitted")
+    @PreAuthorize("hasAuthority('APPRENTICE')")
     public ResponseEntity<Page<ExemptionRequestDto>> getAllSelfSubmittedRequests(@RequestParam(defaultValue = "0") Integer page,
                                                                                  @RequestParam(defaultValue = "10") Integer size) {
 
@@ -66,6 +69,7 @@ public class ExemptionRequestController {
     }
 
     @GetMapping("own-department")
+    @PreAuthorize("hasAuthority('TRAINER')")
     public ResponseEntity<Page<ExemptionRequestDto>> getAllRequestOfTrainersDepartment(@RequestParam(defaultValue = "0") Integer page,
                                                                                        @RequestParam(defaultValue = "10") Integer size) {
 
@@ -76,6 +80,7 @@ public class ExemptionRequestController {
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasAuthority('TRAINER')")
     public ResponseEntity<ExemptionRequestDto> updateExemptionRequestById(@RequestBody @Valid ExemptionRequestUpdateDto requestUpdateDto, @PathVariable Long id) {
 
         ExemptionRequest updatedExemptionRequest = requestUpdateService.updateRequestById(id, requestUpdateDto);
@@ -85,6 +90,7 @@ public class ExemptionRequestController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('TRAINER')")
     public ResponseEntity<Void> deleteExemptionRequestById(@PathVariable Long id) {
         requestDeletionService.deleteById(id);
 

@@ -7,6 +7,7 @@ import de.icp.match.user.service.SocioEduExpertService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class SocioEduExpertController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('TRAINER')")
     public ResponseEntity<SocioEduExpert> registerSocioEduExpert(@RequestBody @Valid SocioEduExpertCreationDto creationDto) {
 
         SocioEduExpert socioEduExpert = socioEduExpertMapper.toEntity(creationDto);
@@ -51,6 +53,7 @@ public class SocioEduExpertController {
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasAuthority('TRAINER')")
     public ResponseEntity<SocioEduExpert> updateSocioEduExpert(@PathVariable Long id, @RequestBody SocioEduExpertCreationDto updateDto) {
 
         SocioEduExpert updatedSocioEduExpert = socioEduExpertService.updateSocioEduExpert(id, updateDto);
