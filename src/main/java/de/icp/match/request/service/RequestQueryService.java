@@ -46,7 +46,7 @@ public class RequestQueryService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("submissionDate"));
 
-        return exemptionRequestRepository.findByApplicantDepartmentId(authenticatedTrainersDepartmentId, pageable);
+        return exemptionRequestRepository.findByApplicantDepartmentIdOrderBySubmissionDateDesc(authenticatedTrainersDepartmentId, pageable);
     }
 
     public List<ExemptionRequest> getRequestsWithMissingConfirmation() {
