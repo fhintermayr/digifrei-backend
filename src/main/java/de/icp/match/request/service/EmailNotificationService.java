@@ -8,6 +8,7 @@ import de.icp.match.user.model.EmailRecipient;
 import de.icp.match.user.model.SocioEduExpert;
 import de.icp.match.user.model.Trainer;
 import de.icp.match.user.service.UserQueryService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,6 +20,9 @@ import java.util.List;
 
 @Service
 public class EmailNotificationService {
+
+    @Value("${mail.enabled}")
+    private boolean emailNotificationIsEnabled;
 
     private final UserQueryService userQueryService;
     private final JavaMailSender mailSender;
@@ -43,6 +47,8 @@ public class EmailNotificationService {
 
     @Scheduled(cron = "${mail.reminder.cron}", zone = "Europe/Berlin")
     public void sendDailyConfirmationReminders() {
+
+        if (emailNotificationIsEnabled) return;
 
         List<ExemptionRequest> requestsWithMissingConfirmation = requestQueryService.getRequestsWithMissingConfirmation();
 
@@ -186,6 +192,5 @@ public class EmailNotificationService {
 
         mailSender.send(message);
     }
-
 
 }
